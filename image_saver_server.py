@@ -8,66 +8,8 @@ from flask import Flask, request, Response
 from urllib.request import Request, urlopen
 import logging
 import logging.config
-
-
-def test_request(img, url):
-    """
-    Send jpg image to url in http post request
-    :param img: numpy array of image
-    :param url: url to send img
-    :return: nothing
-    """
-
-    print("image shape", img.shape)
-    # Encoding data
-    start_time = time.time()
-    data = (cv2.imencode(".jpg", img)[1].tobytes())
-    print((time.time() - start_time) * 1e+3, " Prepare http request time ")
-
-    # Prepare http request
-    start_time = time.time()
-    headers = {'content-type': 'image/jpeg'}
-    print(len(data))
-    req = Request(url, data=data, headers=headers)
-    print((time.time() - start_time) * 1e+3, " Prepare http request time ")
-
-    # Send
-    start_time = time.time()
-    r = urlopen(req).read()
-    print((time.time() - start_time) * 1e+3, " Send time ")
-
-    # Decoding answer
-    start_time = time.time()
-    image = np.frombuffer(r, np.uint8)
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
-    print((time.time() - start_time) * 1e+3, " Decoding answer time ")
-
-    # Show results
-    print("image shape ", image.shape)
-    cv2.imshow("img ", image)
-    cv2.waitKey(1)
-
-
-# Local Url
-url = "http://127.0.0.1:5000/save_image"
-# Photo location
-image_path = "semantic-segmentation-adas-0001\\16_berlin_io.jpg"
-# Read photo
-photo = cv2.imread(image_path)
-# Test POST http request
-test_request(photo, url=url)
-
-
-# def test_request(img, url="http://127.0.0.1:5000/save_image"):
-#     '''
-#     Send jpg image to url in http post request
-#     :param img: numpy array of image
-#     :param url: url
-#     :return: nothing
-#     '''
-#     headers = {'content-type': 'image/jpeg'}
-#     req = request.Request(url, data=img, headers=headers)
-#     request.urlopen(req)
+from tools.text_detection.text_detection import TextDetector
+from tools.text_recognition.text_recognition import TextRecognition
 
 
 def init_logger():
@@ -141,6 +83,30 @@ class Server(object):
     def save_image(self):
         image = np.fromstring(request.data, np.uint8)
         image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+
+        # box detection and text recognition
+        detector = TextDetector()
+        recognitor = TextRecognition()
+        boxes = detector.get_boxes(image, 0, 0)
+
+        temp = image
+        for i in range(len(boxes)):
+            x1 = boxes[i].box_points[0][0]
+            x2 = boxes[i].box_points[2][0]
+            y1 = boxes[i].box_points[0][1]
+            y2 = boxes[i].box_points[2][1]
+            part = image[y1:y2, x1:x2]
+            part = cv2.resize(part, (120, 32))
+            part = cv2.cvtColor(part, cv2.COLOR_BGR2GRAY)
+            sign = TextRecognition.run_recognition(part, None, recognitor.run_vino_recognition)
+            if not sign == "text":
+                cv2.putText(temp, sign, (x1, y1), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 0), 3)
+            cv2.rectangle(temp, (x1, y1), (x2, y2), (0, 0, 255), 2)
+        image = temp
+
+        temp = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        # TextRecognition.run_recognition(temp, None, recognitor.run_vino_recognition)
+
         if self.debug:
             cv2.imshow("img", image)
             cv2.waitKey()
