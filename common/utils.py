@@ -222,6 +222,7 @@ class InferenceEngine(object):
         if cpu_extension == "":
             extension_folder = os.path.abspath(os.path.join("tools", "InferenceEngine"))
             if OsUtil.is_windows():
+                # C:\Users\Igor\work\access_city\cloud-bus-recognition\tools\InferenceEngine\cpu_extension.dll
                 self.cpu_extension = os.path.join(extension_folder, "cpu_extension.dll")
                 if not os.listdir(extension_folder):
                     # "IntelSWTools\openvino\inference_engine\bin\intel64\Release"

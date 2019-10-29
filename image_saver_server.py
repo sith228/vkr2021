@@ -67,7 +67,7 @@ class Server(object):
         self.app = Flask(__name__)
         self.init_flask()
         self.port = _port
-        self.debug = False
+        self.debug = True
         self.output_dir = None
 
     def init_flask(self):
@@ -108,7 +108,7 @@ class Server(object):
         # TextRecognition.run_recognition(temp, None, recognitor.run_vino_recognition)
 
         if self.debug:
-            cv2.imshow("img", image)
+            cv2.imshow("img", cv2.resize(image, (400 * 3, 300 * 3)))
             cv2.waitKey()
         time = datetime.utcnow().strftime('%Y-%m-%d %H-%M-%S')
         log.info(time)
