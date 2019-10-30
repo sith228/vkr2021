@@ -67,7 +67,7 @@ class Server(object):
         self.app = Flask(__name__)
         self.init_flask()
         self.port = _port
-        self.debug = True
+        self.debug = False
         self.output_dir = None
 
     def init_flask(self):
@@ -96,16 +96,14 @@ class Server(object):
             y1 = boxes[i].box_points[0][1]
             y2 = boxes[i].box_points[2][1]
             part = image[y1:y2, x1:x2]
-            part = cv2.resize(part, (120, 32))
-            part = cv2.cvtColor(part, cv2.COLOR_BGR2GRAY)
-            sign = TextRecognition.run_recognition(part, None, recognitor.run_vino_recognition)
-            if not sign == "text":
-                cv2.putText(temp, sign, (x1, y1), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 0), 3)
-            cv2.rectangle(temp, (x1, y1), (x2, y2), (0, 0, 255), 2)
+            if x1 < x2 and y1 < y2:
+                part = cv2.resize(part, (120, 32))
+                part = cv2.cvtColor(part, cv2.COLOR_BGR2GRAY)
+                sign = TextRecognition.run_recognition(part, None, recognitor.run_vino_recognition)
+                if not sign == "text":
+                    cv2.putText(temp, sign, (x1, y1), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 0), 3)
+                cv2.rectangle(temp, (x1, y1), (x2, y2), (0, 0, 255), 2)
         image = temp
-
-        temp = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        # TextRecognition.run_recognition(temp, None, recognitor.run_vino_recognition)
 
         if self.debug:
             cv2.imshow("img", cv2.resize(image, (400 * 3, 300 * 3)))
@@ -116,7 +114,7 @@ class Server(object):
 
         result = cv2.imwrite(os.path.join(self.output_dir, file_name), image)
         log.info("Save result: {}".format(result))
-        return "Image Uploaded Successfully"
+        return "SmartAnswer"
 
     def run(self):
         output_dir = os.path.join("files")

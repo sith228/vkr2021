@@ -1,3 +1,5 @@
+import os
+
 import cv2
 import time
 import numpy as np
@@ -42,6 +44,7 @@ def test_request(img, url):
     r = urlopen(req).read()
     print((time.time() - start_time) * 1e+3, " Send time ")
 
+    return r
     # Decoding answer
     start_time = time.time()
     image = np.frombuffer(r, np.uint8)
@@ -63,4 +66,22 @@ image_path = "test/IMG_20191024_142434.jpg"
 # Read photo
 photo = cv2.imread(image_path)
 # Test POST http request
-test_request(photo, url=url)
+# test_request(photo, url=url)
+
+#TEST
+test_set = []
+for i in os.listdir("test"):
+    if i.endswith(".jpg") or i.endswith(".png") or i.endswith(".jpeg"):
+        test_set.append("test/" + i)
+    elif not i.endswith(".txt"):
+        for j in os.listdir("test/" + i):
+            if j.endswith(".jpg") or j.endswith(".png") or j.endswith(".jpeg"):
+                test_set.append("test/" + i + "/" + j)
+
+set_info = open('test/SetInfo.txt', 'r')
+
+for file_name in test_set:
+    file = cv2.imread(file_name)
+    answer = test_request(file, url=url)
+
+
