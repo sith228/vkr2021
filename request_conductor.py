@@ -1,4 +1,5 @@
 import os
+import time
 
 import cv2
 import time
@@ -17,6 +18,29 @@ from urllib.request import Request, urlopen
 #     headers = {'content-type': 'image/jpeg'}
 #     req = request.Request(url, data=img, headers=headers)
 #     request.urlopen(req)
+
+def generate_image_table(path, table):
+    for i in os.listdir(path):
+        if i.endswith(".jpg") or i.endswith(".png") or i.endswith(".jpeg"):
+            table.write("\"" + path + "/" + i + "\"" + "\n")
+        elif os.path.isdir(path + "/" + i):
+            generate_image_table(path + "/" + i, table)
+
+
+def start_test(path):
+    table = open(path, 'r')
+    log_file = open("log/test_session_" + str(time.strftime("%Y-%m-%d %H-%M", time.gmtime())) + ".log", 'w')
+    for line in table:
+        image_path = line[1: line.find("\"", 1)]
+        image_label = line[line.find("\" ") + 2 : len(line) - 1]
+        image_answer = test_request(cv2.imread(image_path), "http://127.0.0.1:5000/save_image")
+        if image_answer == image_label:
+            log_file.write("[SUCCESS] ")
+        else:
+            log_file.write("[FAILED] ")
+        log_file.write(image_path + " Expected: " + image_label + " Recieved " + str(image_answer) + "\n")
+    log_file.close()
+    table.close()
 
 def test_request(img, url):
     """
@@ -68,20 +92,10 @@ photo = cv2.imread(image_path)
 # Test POST http request
 # test_request(photo, url=url)
 
-#TEST
-test_set = []
-for i in os.listdir("test"):
-    if i.endswith(".jpg") or i.endswith(".png") or i.endswith(".jpeg"):
-        test_set.append("test/" + i)
-    elif not i.endswith(".txt"):
-        for j in os.listdir("test/" + i):
-            if j.endswith(".jpg") or j.endswith(".png") or j.endswith(".jpeg"):
-                test_set.append("test/" + i + "/" + j)
-
-set_info = open('test/SetInfo.txt', 'r')
-
-for file_name in test_set:
-    file = cv2.imread(file_name)
-    answer = test_request(file, url=url)
+# Generate table template
+# table = open("test/table.txt", 'w')
+# generate_image_table("test", table)
+# table.close()
 
 
+start_test("test/table.txt")
