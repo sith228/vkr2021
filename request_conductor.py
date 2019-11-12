@@ -30,15 +30,21 @@ def generate_image_table(path, table):
 def start_test(path):
     table = open(path, 'r')
     log_file = open("log/test_session_" + str(time.strftime("%Y-%m-%d %H-%M", time.gmtime())) + ".log", 'w')
+    right_answers = 0
+    files_count = 0
     for line in table:
+        files_count += 1
         image_path = line[1: line.find("\"", 1)]
         image_label = line[line.find("\" ") + 2 : len(line) - 1]
         image_answer = test_request(cv2.imread(image_path), "http://127.0.0.1:5000/save_image")
+        image_answer = image_answer.decode("utf-8")
         if image_answer == image_label:
             log_file.write("[SUCCESS] ")
+            right_answers += 1
         else:
             log_file.write("[FAILED] ")
         log_file.write(image_path + " Expected: " + image_label + " Recieved " + str(image_answer) + "\n")
+    log_file.write("Files: %d   Right: %d   Accuracy: %d" % (files_count, right_answers, right_answers / files_count))
     log_file.close()
     table.close()
 
