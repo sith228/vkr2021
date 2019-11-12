@@ -3,6 +3,7 @@ from datetime import datetime
 
 import cv2
 import time
+import copy
 import numpy as np
 from flask import Flask, request, Response
 from urllib.request import Request, urlopen
@@ -67,7 +68,7 @@ class Server(object):
         self.app = Flask(__name__)
         self.init_flask()
         self.port = _port
-        self.debug = False
+        self.debug = True
         self.output_dir = None
 
     def init_flask(self):
@@ -89,28 +90,45 @@ class Server(object):
         recognitor = TextRecognition()
         boxes = detector.get_boxes(image, 0, 0)
 
-        temp = image
+        temp = copy.copy(image)
+        number_plate = None
         for i in range(len(boxes)):
             x1 = boxes[i].box_points[0][0]
             x2 = boxes[i].box_points[2][0]
+            x_indent = int((x2 - x1) / 10)
+            x1 = x1 - x_indent
+            x2 = x2 + x_indent
             y1 = boxes[i].box_points[0][1]
             y2 = boxes[i].box_points[2][1]
+            y_indent = int((y2 - y1) / 10)
+            y1 = y1 - y_indent
+            y2 = y2 + y_indent
             part = image[y1:y2, x1:x2]
+            # Part checking
+            if i == 0:
+                number_plate = part
             if x1 < x2 and y1 < y2:
+                if self.debug:
+                    cv2.imwrite(self.output_dir + "/debug/" + datetime.utcnow().strftime('%Y-%m-%d %H-%M-%S[') + str(i) + "].jpg", part)
                 part = cv2.resize(part, (120, 32))
                 part = cv2.cvtColor(part, cv2.COLOR_BGR2GRAY)
                 sign = TextRecognition.run_recognition(part, None, recognitor.run_vino_recognition)
                 if not sign == "text":
                     cv2.putText(temp, sign, (x1, y1), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 0), 3)
                 cv2.rectangle(temp, (x1, y1), (x2, y2), (0, 0, 255), 2)
+
+        time = datetime.utcnow().strftime('%Y-%m-%d %H-%M-%S')
+        log.info(time)
+        file_name = "{}.jpg".format(time)
+
+        if number_plate is not None:
+            cv2.imwrite(os.path.join("test_numbers", file_name), number_plate)
+
         image = temp
 
         if self.debug:
             cv2.imshow("img", cv2.resize(image, (400 * 3, 300 * 3)))
             cv2.waitKey()
-        time = datetime.utcnow().strftime('%Y-%m-%d %H-%M-%S')
-        log.info(time)
-        file_name = "{}.jpg".format(time)
 
         result = cv2.imwrite(os.path.join(self.output_dir, file_name), image)
         log.info("Save result: {}".format(result))
@@ -122,6 +140,8 @@ class Server(object):
         if os.path.exists(output_dir):
             self.output_dir = os.path.abspath(output_dir)
             log.info("Save directory created: {}".format(self.output_dir))
+        if self.debug:
+            os.makedirs(self.output_dir + "/debug", exist_ok=True)
         self.app.run(host="0.0.0.0", port=self.port, threaded=True)
 
 
