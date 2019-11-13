@@ -1,0 +1,3 @@
+[submodule "tools/moran_text_recongizer"]
+	path = tools/moran_text_recongizer
+	url = https://github.com/Canjie-Luo/MORAN_v2
