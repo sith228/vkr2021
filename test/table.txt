@@ -1,22 +1,22 @@
-"test/IMG_20191024_142234.jpg" 100
-"test/IMG_20191024_142429.jpg" 100
-"test/IMG_20191024_142434.jpg" 81
-"test/IMG_20191024_142459.jpg" 100
-"test/IMG_20191024_142509.jpg" 100
-"test/mobilenet_data_v1/2019-10-06 13-12-21.jpg" 100
-"test/mobilenet_data_v1/2019-10-06 13-25-33.jpg" 100
-"test/mobilenet_data_v1/2019-10-06 13-28-06.jpg" 100
-"test/mobilenet_data_v1/2019-10-06 13-28-12.jpg" 100
-"test/mobilenet_data_v1/2019-10-06 13-33-59.jpg" 50
-"test/mobilenet_data_v1/2019-10-06 17-03-20.jpg" 100
-"test/mobilenet_data_v1/2019-10-06 17-33-58.jpg" 100
-"test/mobilenet_data_v1/2019-10-06 18-58-54.jpg" 100
-"test/mobilenet_data_v1/2019-10-06 18-58-55.jpg" 100
-"test/mobilenet_data_v1/2019-10-07 10-54-56.jpg" 100
-"test/mobilenet_data_v1/2019-10-07 11-26-30.jpg" 100
-"test/mobilenet_data_v1/2019-10-07 11-26-44.jpg" 2
-"test/mobilenet_data_v1/2019-10-07 11-27-21.jpg" 100
-"test/mobilenet_data_v1/2019-10-07 11-28-19.jpg" 100
-"test/mobilenet_data_v1/2019-10-07 11-31-32.jpg" 100
-"test/mobilenet_data_v1/2019-10-07 11-33-23.jpg" 100
-"test/mobilenet_data_v1/2019-10-07 11-33-27.jpg" 100
+test/IMG_20191024_142234.jpg|94
+test/IMG_20191024_142429.jpg|81
+test/IMG_20191024_142434.jpg|81
+test/IMG_20191024_142459.jpg|68
+test/IMG_20191024_142509.jpg|1
+test/mobilenet_data_v1/2019-10-06 13-12-21.jpg|83
+test/mobilenet_data_v1/2019-10-06 13-25-33.jpg|18
+test/mobilenet_data_v1/2019-10-06 13-28-06.jpg|83
+test/mobilenet_data_v1/2019-10-06 13-28-12.jpg|83
+test/mobilenet_data_v1/2019-10-06 13-33-59.jpg|50
+test/mobilenet_data_v1/2019-10-06 17-03-20.jpg|26
+test/mobilenet_data_v1/2019-10-06 17-33-58.jpg|81
+test/mobilenet_data_v1/2019-10-06 18-58-54.jpg|14
+test/mobilenet_data_v1/2019-10-06 18-58-55.jpg|14
+test/mobilenet_data_v1/2019-10-07 10-54-56.jpg|81
+test/mobilenet_data_v1/2019-10-07 11-26-30.jpg|83
+test/mobilenet_data_v1/2019-10-07 11-26-44.jpg|2
+test/mobilenet_data_v1/2019-10-07 11-27-21.jpg|27
+test/mobilenet_data_v1/2019-10-07 11-28-19.jpg|-1
+test/mobilenet_data_v1/2019-10-07 11-31-32.jpg|46
+test/mobilenet_data_v1/2019-10-07 11-33-23.jpg|14
+test/mobilenet_data_v1/2019-10-07 11-33-27.jpg|14
