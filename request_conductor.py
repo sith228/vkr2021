@@ -70,6 +70,9 @@ def start_test(path):
         files_count += 1
         line = line.split('|')
         image_path = line[0]
+        if not os.path.isfile(image_path):
+            log.debug("[ERROR] Can't find file %s" % image_path.rstrip('\n'))
+            continue
         image_label = line[1].rstrip('\n')
         image_answer = test_request(cv2.imread(image_path), "http://127.0.0.1:5000/save_image")
         image_answer = image_answer.decode("utf-8")
