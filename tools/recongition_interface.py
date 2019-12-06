@@ -9,7 +9,7 @@ def moran_demo(cv2_image):
     from tools.moran_text_recongizer.models.moran import MORAN
 
     model_path = 'tools/moran_text_recongizer/demo.pth'
-    img_path = 'tools/moran_text_recongizer//demo/0.png'
+    # img_path = 'tools/moran_text_recongizer//demo/0.png'
     alphabet = '0:1:2:3:4:5:6:7:8:9:a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t:u:v:w:x:y:z:$'
 
     cuda_flag = False
@@ -37,7 +37,8 @@ def moran_demo(cv2_image):
 
     converter = utils.strLabelConverterForAttention(alphabet, ':')
     transformer = dataset.resizeNormalize((100, 32))
-    image = Image.open(img_path).convert('L')
+    image = Image.fromarray(cv2.cvtColor(cv2_image, cv2.COLOR_BGR2GRAY))
+    image.convert('L')
     image = transformer(image)
 
     if cuda_flag:
