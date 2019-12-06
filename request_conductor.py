@@ -134,5 +134,4 @@ log = logging.getLogger("root")
 # generate_image_table("test", table)
 # table.close()
 
-
 start_test("test/table.txt")

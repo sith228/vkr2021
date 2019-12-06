@@ -2,7 +2,7 @@ def moran_demo(cv2_image):
     import torch
     from torch.autograd import Variable
     import tools.moran_text_recongizer.tools.utils as utils
-    import  tools.moran_text_recongizer.tools.dataset as dataset
+    import tools.moran_text_recongizer.tools.dataset as dataset
     from PIL import Image
     from collections import OrderedDict
     import cv2
