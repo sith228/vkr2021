@@ -1,12 +1,14 @@
+import torch
+from torch.autograd import Variable
+import tools.moran_text_recongizer.tools.utils as utils
+import tools.moran_text_recongizer.tools.dataset as dataset
+from PIL import Image
+from collections import OrderedDict
+import cv2
+from tools.moran_text_recongizer.models.moran import MORAN as moran_recognizer
+
 def moran_demo(cv2_image):
-    import torch
-    from torch.autograd import Variable
-    import tools.moran_text_recongizer.tools.utils as utils
-    import tools.moran_text_recongizer.tools.dataset as dataset
-    from PIL import Image
-    from collections import OrderedDict
-    import cv2
-    from tools.moran_text_recongizer.models.moran import MORAN
+
 
     model_path = 'tools/moran_model/demo.pth'
     # img_path = 'tools/moran_text_recongizer//demo/0.png'
@@ -15,10 +17,10 @@ def moran_demo(cv2_image):
     cuda_flag = False
     if torch.cuda.is_available():
         cuda_flag = True
-        MORAN = MORAN(1, len(alphabet.split(':')), 256, 32, 100, BidirDecoder=True, CUDA=cuda_flag)
-        MORAN = MORAN.cuda()
+        MORAN = moran_recognizer(1, len(alphabet.split(':')), 256, 32, 100, BidirDecoder=True, CUDA=cuda_flag)
+        MORAN = moran_recognizer.cuda()
     else:
-        MORAN = MORAN(1, len(alphabet.split(':')), 256, 32, 100, BidirDecoder=True, inputDataType='torch.FloatTensor', CUDA=cuda_flag)
+        MORAN = moran_recognizer(1, len(alphabet.split(':')), 256, 32, 100, BidirDecoder=True, inputDataType='torch.FloatTensor', CUDA=cuda_flag)
 
     print('loading pretrained model from %s' % model_path)
     if cuda_flag:
