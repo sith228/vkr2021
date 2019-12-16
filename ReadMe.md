@@ -1,11 +1,11 @@
-#Cloud bus recognition#
+# Cloud bus recognition
 
-##Server arguments##
+## Server arguments
 
-###Required###
+### Required
 port - Server port number
 
-###Optional###
+### Optional
 detector - Text detector model (default)
 recognizer - Text recognition model (default, moran)
 debug - Show debug information
