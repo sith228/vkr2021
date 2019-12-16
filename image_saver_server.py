@@ -4,6 +4,7 @@ from datetime import datetime
 import cv2
 import time
 import copy
+import argparse
 import numpy as np
 from flask import Flask, request, Response
 from urllib.request import Request, urlopen
@@ -14,6 +15,18 @@ from tools.text_recognition.text_recognition import TextRecognition
 
 from tools.recongition_interface import moran_demo as moran_recognizer
 
+
+def init_arg_parser():
+    parser = argparse.ArgumentParser()
+
+    # Required arguments
+    parser.add_argument("port", type=int, action="store", choices=range(0, 65535), help="Server port number")
+
+    # Optional arguments
+    parser.add_argument("-detector", default="default", type=str, action="store", choices=["default"], help="Text detection network")
+    parser.add_argument("-recognizer", default="moran",  type=str, action="store", choices=["default", "moran"], help="Text recognition network")
+    parser.add_argument("-debug", action="store_true")
+    return parser
 
 def init_logger():
     logger_config = {
@@ -65,12 +78,12 @@ log.info("Hello")
 
 
 class Server(object):
-    def __init__(self, _port):
+    def __init__(self, args):
         # setup Flask
         self.app = Flask(__name__)
         self.init_flask()
-        self.port = _port
-        self.debug = False
+        self.port = args.port
+        self.debug = args.debug
         self.output_dir = None
 
     def init_flask(self):
@@ -154,5 +167,8 @@ class Server(object):
         self.app.run(host="0.0.0.0", port=self.port, threaded=True)
 
 
-s = Server(5000)
+arg_parser = init_arg_parser()
+args = arg_parser.parse_args()
+
+s = Server(args)
 s.run()
