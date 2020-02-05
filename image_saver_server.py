@@ -11,9 +11,9 @@ from urllib.request import Request, urlopen
 import logging
 import logging.config
 from tools.text_detection.text_detection import TextDetector
-from tools.text_recognition.text_recognition import TextRecognition
+# from tools.text_recognition.text_recognition import TextRecognition
 
-from tools.recongition_interface import moran_demo as moran_recognizer
+from tools.recongition_interface import RecognitionInterface
 
 
 def init_arg_parser():
@@ -104,7 +104,7 @@ class Server(object):
 
         # box detection and text recognition
         detector = TextDetector()
-        recognitor = TextRecognition()
+        recognizer = RecognitionInterface()
         boxes = detector.get_boxes(image, 0, 0)
 
         temp = copy.copy(image)
@@ -132,7 +132,7 @@ class Server(object):
                 part = cv2.resize(part, (120, 32))
                 # part = cv2.cvtColor(part, cv2.COLOR_BGR2GRAY)
                 # sign = TextRecognition.run_recognition(part, None, recognitor.run_vino_recognition)
-                sign = moran_recognizer(part)
+                sign = recognizer.run_recognition(part)
                 if i == 0:
                     answer = sign
                 if not sign == "text":
