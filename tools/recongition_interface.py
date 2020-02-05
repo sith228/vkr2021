@@ -13,19 +13,18 @@ class RecognitionInterface:
         self.model_name = "moran"
         self.model_path = "tools/models/moran/demo.pth"
 
-    def run_recognition(self, cv2_image):
-        alphabet = '0:1:2:3:4:5:6:7:8:9:a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t:u:v:w:x:y:z:$'
+        self.alphabet = '0:1:2:3:4:5:6:7:8:9:a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t:u:v:w:x:y:z:$'
 
-        cuda_flag = False
+        self.cuda_flag = False
         if torch.cuda.is_available():
-            cuda_flag = True
-            MORAN = moran_recognizer(1, len(alphabet.split(':')), 256, 32, 100, BidirDecoder=True, CUDA=cuda_flag)
-            MORAN = moran_recognizer.cuda()
+            self.cuda_flag = True
+            self.MORAN = moran_recognizer(1, len(self.alphabet.split(':')), 256, 32, 100, BidirDecoder=True, CUDA=self.cuda_flag)
+            self.MORAN = moran_recognizer.cuda()
         else:
-            MORAN = moran_recognizer(1, len(alphabet.split(':')), 256, 32, 100, BidirDecoder=True, inputDataType='torch.FloatTensor', CUDA=cuda_flag)
+            self.MORAN = moran_recognizer(1, len(self.alphabet.split(':')), 256, 32, 100, BidirDecoder=True, inputDataType='torch.FloatTensor', CUDA=self.cuda_flag)
 
         print('loading pretrained model from %s' % self.model_path)
-        if cuda_flag:
+        if self.cuda_flag:
             state_dict = torch.load(self.model_path)
         else:
             state_dict = torch.load(self.model_path, map_location='cpu')
@@ -33,19 +32,22 @@ class RecognitionInterface:
         for k, v in state_dict.items():
             name = k.replace("module.", "") # remove `module.`
             MORAN_state_dict_rename[name] = v
-        MORAN.load_state_dict(MORAN_state_dict_rename)
+        self.MORAN.load_state_dict(MORAN_state_dict_rename)
 
-        for p in MORAN.parameters():
+        for p in self.MORAN.parameters():
             p.requires_grad = False
-        MORAN.eval()
+        self.MORAN.eval()
 
-        converter = utils.strLabelConverterForAttention(alphabet, ':')
+    def run_recognition(self, cv2_image):
+
+
+        converter = utils.strLabelConverterForAttention(self.alphabet, ':')
         transformer = dataset.resizeNormalize((100, 32))
         image = Image.fromarray(cv2.cvtColor(cv2_image, cv2.COLOR_BGR2GRAY))
         image.convert('L')
         image = transformer(image)
 
-        if cuda_flag:
+        if self.cuda_flag:
             image = image.cuda()
         image = image.view(1, *image.size())
         image = Variable(image)
@@ -58,7 +60,7 @@ class RecognitionInterface:
         t, l = converter.encode('0'*max_iter)
         utils.loadData(text, t)
         utils.loadData(length, l)
-        output = MORAN(image, length, text, text, test=True, debug=True)
+        output = self.MORAN(image, length, text, text, test=True, debug=True)
 
         preds, preds_reverse = output[0]
         demo = output[1]
