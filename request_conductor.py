@@ -2,6 +2,7 @@ import os
 import time
 import logging
 import logging.config
+import configparser
 
 import cv2
 import time
@@ -54,35 +55,41 @@ def init_logger():
     logging.config.dictConfig(logger_config)
 
 
-def generate_image_table(path, table):
+def init_config(config_path, images_path):
+    config = configparser.ConfigParser()
+    config.add_section("Labels")
+    config = add_images(config, images_path)
+    with open(config_path, "w") as config_file:
+        config.write(config_file)
+
+
+def add_images(config, path):
     for i in os.listdir(path):
         if i.endswith(".jpg") or i.endswith(".png") or i.endswith(".jpeg"):
-            table.write(path + "|" + "\n")
-        elif os.path.isdir(path + "/" + i):
-            generate_image_table(path + "/" + i, table)
+            config.set("Labels", path + '/' + i, "")
+        elif os.path.isdir(path + '/' + i):
+            config = add_images(config, path + '/' + i)
+    return config
 
 
-def start_test(path):
-    table = open(path, 'r')
+def start_test(config):
     right_answers = 0
     files_count = 0
-    for line in table:
+    images = config.options("Labels")
+    for image in images:
         files_count += 1
-        line = line.split('|')
-        image_path = line[0]
-        if not os.path.isfile(image_path):
-            log.debug("[ERROR] Can't find file %s" % image_path.rstrip('\n'))
+        if not os.path.isfile(image):
+            log.debug("[ERROR] Can't find file %s" % image)
             continue
-        image_label = line[1].rstrip('\n')
-        image_answer = test_request(cv2.imread(image_path), "http://127.0.0.1:5000/save_image")
+        image_label = config.get("Labels", image)
+        image_answer = test_request(cv2.imread(image), "http://127.0.0.1:5000/save_image")
         image_answer = image_answer.decode("utf-8")
         if image_answer == image_label:
-            log.debug("[RIGHT] Expected: %3s Received: %4s %s" % (image_label, image_answer, image_path))
+            log.debug("[RIGHT] Expected: %3s Received: %4s %s" % (image_label, image_answer, image))
             right_answers += 1
         else:
-            log.debug("[WRONG] Expected: %3s Received: %4s %s" % (image_label, image_answer, image_path))
+            log.debug("[WRONG] Expected: %3s Received: %4s %s" % (image_label, image_answer, image))
     log.debug("Right: %d, All: %d, Accuracy: %f" % (right_answers, files_count, right_answers / files_count))
-    table.close()
 
 
 def test_request(img, url):
@@ -128,10 +135,10 @@ def test_request(img, url):
 init_logger()
 log = logging.getLogger("root")
 
+if not os.path.exists("test/config.cfg"):
+    init_config("test/config.cfg", "test")
+config = configparser.ConfigParser()
+config.read("test/config.cfg")
 
-# Generate table template
-# table = open("test/table.txt", 'w')
-# generate_image_table("test", table)
-# table.close()
+start_test(config)
 
-start_test("test/table.txt")
