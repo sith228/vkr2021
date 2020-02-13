@@ -14,6 +14,7 @@ from tools.text_detection.text_detection import TextDetector
 # from tools.text_recognition.text_recognition import TextRecognition
 
 from tools.recongition_interface import RecognitionInterface
+from tools.box_validator import BoxValidator
 
 
 def init_arg_parser():
@@ -105,11 +106,14 @@ class Server(object):
         # box detection and text recognition
         detector = TextDetector()
         recognizer = RecognitionInterface()
+        validator = BoxValidator()
         boxes = detector.get_boxes(image, 0, 0)
 
         temp = copy.copy(image)
         number_plate = None
         for i in range(len(boxes)):
+            if not validator.size_validation(boxes[i]):
+                continue
             x1 = boxes[i].box_points[0][0]
             x2 = boxes[i].box_points[2][0]
             x_indent = int((x2 - x1) / 10)

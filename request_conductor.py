@@ -76,20 +76,24 @@ def start_test(config):
     right_answers = 0
     files_count = 0
     images = config.options("Labels")
+    start_time = time.time()
     for image in images:
         files_count += 1
         if not os.path.isfile(image):
             log.debug("[ERROR] Can't find file %s" % image)
             continue
         image_label = config.get("Labels", image)
+        image_time_start = time.time()
         image_answer = test_request(cv2.imread(image), "http://127.0.0.1:5000/save_image")
         image_answer = image_answer.decode("utf-8")
+        image_time_end = time.time()
         if image_answer == image_label:
-            log.debug("[RIGHT] Expected: %3s Received: %4s %s" % (image_label, image_answer, image))
+            log.debug("[RIGHT] Time: %1.3f Expected: %3s Received: %4s %s" % (image_time_end - image_time_start, image_label, image_answer, image))
             right_answers += 1
         else:
-            log.debug("[WRONG] Expected: %3s Received: %4s %s" % (image_label, image_answer, image))
-    log.debug("Right: %d, All: %d, Accuracy: %f" % (right_answers, files_count, right_answers / files_count))
+            log.debug("[WRONG] Time: %1.3f Expected: %3s Received: %4s %s" % (image_time_end - image_time_start, image_label, image_answer, image))
+    end_time = time.time()
+    log.debug("Right: %d, All: %d, Accuracy: %f, Time: %f" % (right_answers, files_count, right_answers / files_count, end_time - start_time))
 
 
 def test_request(img, url):
