@@ -36,8 +36,6 @@ RUN pip3 install torch
 RUN pip3 install torchvision
 
 #Copy files
-#RUN mkdir /server
-
 RUN mkdir /server/common
 ADD /common /server/common
 
