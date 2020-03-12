@@ -3,6 +3,7 @@ import time
 import logging
 import logging.config
 import configparser
+import argparse
 
 import cv2
 import time
@@ -10,6 +11,14 @@ import numpy as np
 from flask import Flask, request, Response
 from urllib.request import Request, urlopen
 
+
+def init_arg_parser():
+    parser = argparse.ArgumentParser()
+
+    # Required arguments
+    parser.add_argument("-ip", default="127.0.0.1:5000", type=str, action="store", help="Server IP")
+
+    return parser
 
 def init_logger():
     logger_config = {
@@ -72,7 +81,7 @@ def add_images(config, path):
     return config
 
 
-def start_test(config):
+def start_test(config, args):
     right_answers = 0
     files_count = 0
     images = config.options("Labels")
@@ -84,7 +93,7 @@ def start_test(config):
             continue
         image_label = config.get("Labels", image)
         image_time_start = time.time()
-        image_answer = test_request(cv2.imread(image), "http://127.0.0.1:5000/save_image")
+        image_answer = test_request(cv2.imread(image), "http://" + args.ip + "/save_image")
         image_answer = image_answer.decode("utf-8")
         image_time_end = time.time()
         if image_answer == image_label:
@@ -139,10 +148,13 @@ def test_request(img, url):
 init_logger()
 log = logging.getLogger("root")
 
+arg_parser = init_arg_parser()
+args = arg_parser.parse_args()
+
 if not os.path.exists("test/config.cfg"):
     init_config("test/config.cfg", "test")
 config = configparser.ConfigParser()
 config.read("test/config.cfg")
 
-start_test(config)
+start_test(config, args)
 
