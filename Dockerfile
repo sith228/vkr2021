@@ -5,7 +5,7 @@ MAINTAINER Zoreev Mikhail <zoreev@lazyfox.dev>
 #Install OpenVino
 ENV http_proxy $HTTP_PROXY
 ENV https_proxy $HTTPS_PROXY
-ARG DOWNLOAD_LINK=http://registrationcenter-download.intel.com/akdlm/irc_nas/15944/l_openvino_toolkit_p_2019.3.334.tgz
+ARG DOWNLOAD_LINK=http://registrationcenter-download.intel.com/akdlm/irc_nas/16345/l_openvino_toolkit_p_2020.1.023.tgz
 ARG INSTALL_DIR=/opt/intel/openvino
 ARG TEMP_DIR=/tmp/openvino_installer
 RUN apt-get update && apt-get install -y --no-install-recommends \
