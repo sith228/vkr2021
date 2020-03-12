@@ -20,6 +20,7 @@ urllib3
 Werkzeug
 wincertstore
 
+colour
 LMDB
 matplotlib
 Pillow
