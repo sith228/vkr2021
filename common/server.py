@@ -10,7 +10,7 @@ from response_callbacks.low_res_color import LowResColor
 
 
 class Server(object):
-    def __init__(self, args, log):
+    def __init__(self, args):
         # setup Flask
         self.app = Flask(__name__)
         self.init_flask()

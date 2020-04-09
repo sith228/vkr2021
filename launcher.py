@@ -1,4 +1,5 @@
 import argparse
+import logging
 
 from common.logger import init_logger
 from common.server import Server
@@ -18,9 +19,13 @@ def init_arg_parser():
 
 
 init_logger()
+log = logging.getLogger("root")
+log.info("Hello, logger here")
 
 arg_parser = init_arg_parser()
 args = arg_parser.parse_args()
+log.info("Hello, argparcer here")
 
-s = Server(args, log)
+s = Server(args)
+log.info("Hello, server init successful")
 s.run()

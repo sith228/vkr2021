@@ -44,6 +44,3 @@ def init_logger():
     }
 
     logging.config.dictConfig(logger_config)
-    log = logging.getLogger("root")
-    log.info("Hello, logger here")
-
