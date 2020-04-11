@@ -7,15 +7,15 @@ import numpy as np
 
 from response_callbacks.callback import Callback
 from tools.box_validator import BoxValidator
-from tools.models.moran_text_recogniotion.recongition_interface import RecognitionInterface
+from tools.models.moran_text_recognition.recongition_interface import RecognitionInterface
 from tools.models.openvino_text_detection.text_detection import OVTextDetector
 
 
 class LowRes(Callback):
-    def __init__(self, debug=True):
+    def __init__(self, debug=False):
         super().__init__()
         self.debug = debug
-        self.output_dir = None
+        self.output_dir = "files"
 
     def startProcessing(self, data) -> dict:
         image = np.fromstring(data, np.uint8)
@@ -48,8 +48,8 @@ class LowRes(Callback):
 
             if x1 < x2 and y1 < y2:
                 if self.debug:
-                    cv2.imwrite(self.output_dir + "/debug/" + datetime.utcnow().strftime('%Y-%m-%d %H-%M-%S[') + str(
-                        i) + "].jpg", part)
+                    cv2.imwrite(self.output_dir + "/debug/" + datetime.utcnow().strftime('%Y-%m-%d %H-%M-%S[') + str(i)
+                                + "].jpg", part)
 
                 # Part checking
                 if i == 0:

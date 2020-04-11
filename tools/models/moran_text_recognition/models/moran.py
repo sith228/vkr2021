@@ -1,6 +1,6 @@
 import torch.nn as nn
-from tools.models.moran_text_recogniotion.models.morn import MORN
-from tools.models.moran_text_recogniotion.models.asrn_res import ASRN
+from tools.models.moran_text_recognition.models.morn import MORN
+from tools.models.moran_text_recognition.models.asrn_res import ASRN
 
 class MORAN(nn.Module):
 

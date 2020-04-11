@@ -31,9 +31,7 @@ RUN apt-get -yqq update
 RUN apt-get -yqq install python3-pip python3-dev curl gnupg
 
 ADD requirements.txt /server/requirements.txt
-RUN pip3 install -r "server/requirements.txt"
-RUN pip3 --no-cache-dir install torch
-RUN pip3 install torchvision
+RUN pip3 --no-cache-dir install -r "server/requirements.txt"
 
 #Copy files
 RUN mkdir /server/common

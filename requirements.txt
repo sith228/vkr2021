@@ -20,9 +20,10 @@ urllib3
 Werkzeug
 wincertstore
 
+#Moran text recongition
 colour
 LMDB
 matplotlib
 Pillow
-#torch
-#torchvision
+torch
+torchvision

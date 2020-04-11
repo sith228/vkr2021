@@ -1,5 +1,5 @@
 from tools.models.openvino_text_recognition.text_recognition import OVTextRecognition
-from tools.models.moran_text_recogniotion.recongition_interface import RecognitionInterface
+from tools.models.moran_text_recognition.recongition_interface import RecognitionInterface
 
 
 class TextRecognition(object):
