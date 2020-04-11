@@ -37,11 +37,14 @@ RUN pip3 --no-cache-dir install -r "server/requirements.txt"
 RUN mkdir /server/common
 ADD /common /server/common
 
+RUN mkdir /server/response_callbacks
+ADD /response_callbacks /server/response_callbacks
+
 RUN mkdir /server/tools
 ADD /tools /server/tools
 
 ADD Run.sh /server/Run.sh
-ADD image_saver_server.py /server/image_saver_server.py
+ADD launcher.py /server/launcher.py
 
 RUN mkdir /server/files
 
