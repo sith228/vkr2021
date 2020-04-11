@@ -193,8 +193,8 @@ class OVTextDetector(object):
     def __init__(self, ie=True):
         print("Load text-detection-0002.xml")
 
-        model_xml = os.path.join("tools", "text_detection", "text-detection-0002.xml")
-        model_bin = os.path.join("tools", "text_detection", "text-detection-0002.bin")
+        model_xml = os.path.join("tools", "models", "openvino_text_detection", "text-detection-0002.xml")
+        model_bin = os.path.join("tools", "models", "openvino_text_detection", "text-detection-0002.bin")
 
         print(os.path.exists(model_bin))
         print(os.path.exists(model_xml))

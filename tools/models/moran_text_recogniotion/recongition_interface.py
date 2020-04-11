@@ -11,7 +11,7 @@ from tools.models.moran_text_recogniotion.models.moran import MORAN as moran_rec
 class RecognitionInterface:
     def __init__(self):
         self.model_name = "moran"
-        self.model_path = "tools/models/moran/demo.pth"
+        self.model_path = "tools/models/moran_text_recognition/demo.pth"
 
         self.alphabet = '0:1:2:3:4:5:6:7:8:9:a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t:u:v:w:x:y:z:$'
 

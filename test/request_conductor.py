@@ -93,7 +93,7 @@ def start_test(config, args):
             continue
         image_label = config.get("Labels", image)
         image_time_start = time.time()
-        image_answer = test_request(cv2.imread(image), "http://" + args.ip + "/save_image")
+        image_answer = test_request(cv2.imread(image), "http://" + args.ip + "/load_low_res_image")
         image_answer = image_answer.decode("utf-8")
         image_time_end = time.time()
         if image_answer == image_label:
@@ -151,10 +151,10 @@ log = logging.getLogger("root")
 arg_parser = init_arg_parser()
 args = arg_parser.parse_args()
 
-if not os.path.exists("test/config.cfg"):
-    init_config("test/config.cfg", "test")
+if not os.path.exists("config.cfg"):
+    init_config("config.cfg", ".")
 config = configparser.ConfigParser()
-config.read("test/config.cfg")
+config.read("config.cfg")
 
 start_test(config, args)
 
