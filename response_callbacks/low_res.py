@@ -9,6 +9,7 @@ from response_callbacks.callback import Callback
 from tools.box_validator import BoxValidator
 from tools.models.moran_text_recognition.recongition_interface import RecognitionInterface
 from tools.models.openvino_text_detection.text_detection import OVTextDetector
+from tools.models.openvino_vehicle_detection.vehicle_detection import OVVehicleDetector
 
 
 class LowRes(Callback):
@@ -24,44 +25,64 @@ class LowRes(Callback):
         answer = " "
 
         # box detection and text recognition
-        detector = OVTextDetector()
-        recognizer = RecognitionInterface()
+        vehicle_detector = OVVehicleDetector()
+        text_detector = OVTextDetector()
+        text_recognizer = RecognitionInterface()
         validator = BoxValidator()
-        boxes = detector.get_boxes(image, 0, 0)
 
+        vehicle_boxes = vehicle_detector.get_boxes(image)
+        self.log.info("Veichels = %d", len(vehicle_boxes))
         temp = copy.copy(image)
+
+        boxes = []
+        for box in vehicle_boxes:
+            ymin = box[0][1]
+            ymax = box[1][1]
+            xmin = box[0][0]
+            xmax = box[1][0]
+            temp_boxes = text_detector.get_boxes(image[ymin:ymax, xmin:xmax], 0, 0)
+            for temp_box in temp_boxes:
+                x1 = temp_box.bound_box_points[0][0]
+                x2 = temp_box.bound_box_points[1][0]
+                y1 = temp_box.bound_box_points[0][1]
+                y2 = temp_box.bound_box_points[1][1]
+                boxes.append([[x1 + xmin, y1 + ymin], [x2 + xmin, y2 + ymin]])
+            cv2.rectangle(temp, (xmin, ymin), (xmax, ymax), (255, 255, 0), 2)
+
+        named = False
         number_plate = None
-        for i in range(len(boxes)):
-            if not validator.size_validation(boxes[i]):
+        for box in boxes:
+            if not validator.size_validation(box):
                 continue
-            x1 = boxes[i].box_points[0][0]
-            x2 = boxes[i].box_points[2][0]
+            x1 = box[0][0]
+            x2 = box[1][0]
             x_indent = int((x2 - x1) / 10)
-            x1 = x1 - x_indent
+            x1 = max(x1 - x_indent, 0)
             x2 = x2 + x_indent
-            y1 = boxes[i].box_points[0][1]
-            y2 = boxes[i].box_points[2][1]
+            y1 = box[0][1]
+            y2 = box[1][1]
             y_indent = int((y2 - y1) / 10)
-            y1 = y1 - y_indent
+            y1 = max(y1 - y_indent, 0)
             y2 = y2 + y_indent
             part = image[y1:y2, x1:x2]
 
             if x1 < x2 and y1 < y2:
-                if self.debug:
-                    cv2.imwrite(self.output_dir + "/debug/" + datetime.utcnow().strftime('%Y-%m-%d %H-%M-%S[') + str(i)
-                                + "].jpg", part)
+                #if self.debug:
+                 #   cv2.imwrite(self.output_dir + "/debug/" + datetime.utcnow().strftime('%Y-%m-%d %H-%M-%S[') + str(i)
+                 #               + "].jpg", part)
 
                 # Part checking
-                if i == 0:
+                if not named:
                     number_plate = part
-                part = cv2.resize(part, (120, 32))
+                # part = cv2.resize(part, (120, 32))
                 # part = cv2.cvtColor(part, cv2.COLOR_BGR2GRAY)
                 # sign = TextRecognition.run_recognition(part, None, recognitor.run_vino_recognition)
-                sign = recognizer.run_recognition(part)
-                if i == 0:
+                sign = text_recognizer.run_recognition(part)
+                if not named:
                     answer = sign
+                    named = True
                 if not sign == "text":
-                    cv2.putText(temp, sign, (x1, y1), cv2.FONT_HERSHEY_COMPLEX, 2, (255, 0, 0), 3)
+                    cv2.putText(temp, sign, (x1, y1), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 0, 0), 1)
                 cv2.rectangle(temp, (x1, y1), (x2, y2), (0, 0, 255), 2)
 
         time = datetime.utcnow().strftime('%Y-%m-%d %H-%M-%S')
