@@ -7,6 +7,7 @@ import torch.backends.cudnn as cudnn
 from torch.autograd import Variable
 
 import cv2
+
 from common import craft_utils
 from common import imgproc
 from common import file_utils
@@ -48,6 +49,7 @@ class CraftTextDetector(object):
         else:
             trained_model = os.path.join("craft_mlt_25k.pth")
 
+        trained_model = r'D:\cloud_bus\cloud-bus-recognition\tools\models\craft_text_segmentation\craft_mlt_25k.pth'
         print(os.path.exists(trained_model))
 
         self.w = 1280
@@ -100,7 +102,7 @@ class CraftTextDetector(object):
         t1 = time.time()
         # Post-processing
         boxes, polys = craft_utils.getDetBoxes(score_text, score_link, text_threshold,
-                                               link_threshold, low_text, poly, image)
+                                               link_threshold, low_text, poly)
         boxes = craft_utils.adjustResultCoordinates(boxes, ratio_w, ratio_h)
         polys = craft_utils.adjustResultCoordinates(polys, ratio_w, ratio_h)
 
@@ -135,7 +137,7 @@ class CraftTextDetector(object):
 
 def main():
     """ For test images in a folder """
-    Datasets_folder = "C:\\Users\\Igor\\work\\prices\\price-recognition\\Datasets\\temp_dataset"
+    Datasets_folder = "D:\\cloud_bus\\cloud-bus-recognition\\test\\mobilenet_data_v1"
     image_list = [os.path.join(Datasets_folder, i) for i in os.listdir(Datasets_folder)]
 
     result_folder = './result/'
@@ -156,8 +158,8 @@ def main():
         # save score text
         filename, file_ext = os.path.splitext(os.path.basename(image_path))
         mask_file = result_folder + "/res_" + filename + '_mask.jpg'
-        cv2.imshow("score_text", score_text)
-        cv2.waitKey(1)
+        # cv2.imshow("score_text", score_text)
+        # cv2.waitKey(1)
         cv2.imwrite(mask_file, score_text)
 
         file_utils.saveResult(image_path, image[:,:,::-1], polys, dirname=result_folder)
