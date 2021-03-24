@@ -7,6 +7,7 @@ import time
 
 from common.utils import RecognitionUtils, OpenCvInference, InferenceEngine
 
+#TODO Rename file
 
 class OVTextRecognition(RecognitionUtils):
     # load models
@@ -43,7 +44,7 @@ class OVTextRecognition(RecognitionUtils):
                 is_num = False
         if is_num:
             return a
-        return "text"
+        return "text"  # TODO WHATA FUCK
 
     # @staticmethod
     def get_recognition_result(self, image, boxes, number_of_components):
@@ -81,11 +82,7 @@ class OVTextRecognition(RecognitionUtils):
 
     @staticmethod
     def run_recognition(roi, box, method, name=""):
-        # if name != "":
-        #     cv2.imwrite("holst{}.jpeg".format(time.time()), roi)
         text = method(roi)
-        # box.set_vino_text(text) if "vino" in str(method) else box.set_tesseract_text(text)
-        # box.set_vino_check() if "vino" in str(method) else box.set_tesseract_check()
         return text
 
 

@@ -15,6 +15,7 @@ def init_arg_parser():
     parser.add_argument("-detector", default="default", type=str, action="store", choices=["default"], help="Text detection network")
     parser.add_argument("-recognizer", default="moran",  type=str, action="store", choices=["default", "moran"], help="Text recognition network")
     parser.add_argument("-debug", action="store_true")
+    parser.add_argument("-output_dir", default="files")
     return parser
 
 

@@ -8,7 +8,7 @@ import logging as log
 
 from openvino.inference_engine import IENetwork, IECore
 
-
+# TODO: change realization to with IE utils.
 class OVVehicleDetector:
     def __init__(self):
         model_xml = os.path.join("tools", "models", "openvino_vehicle_detection", "vehicle-detection-adas-0002.xml")
@@ -58,7 +58,7 @@ class OVVehicleDetector:
         boxes = []
         for obj in result[0][0]:
             # Draw only objects when probability more than specified threshold
-            if obj[2] > 0.5: #THRESOLD!!!
+            if obj[2] > 0.5: #THRESOLD!!! #TODO change to variable
                 xmin = int(obj[3] * frame_w)
                 ymin = int(obj[4] * frame_h)
                 xmax = int(obj[5] * frame_w)
