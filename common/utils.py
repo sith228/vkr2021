@@ -4,7 +4,6 @@ from openvino.inference_engine import IENetwork, IEPlugin
 import numpy as np
 import platform
 import imutils
-import time
 import cv2
 import sys
 import os
@@ -85,27 +84,6 @@ def softmax(x):
 
 
 class RecognitionUtils(object):
-    def __init__(self):
-        self.augment_num = cv2.imread(os.path.join('common', 'augmentation_images', '6.png'), 0)
-        self.augment_num2 = cv2.imread(os.path.join('common', 'augmentation_images', '2.png'), 0)
-
-    @staticmethod
-    def resize_for_open_vino(image):
-        image = imutils.resize(image, height=32)
-        # image = image_resize(image, height=32)
-        if image.shape[1] > 120:
-            return cv2.resize(image, (120, 32))
-
-        padd_left = (120 - image.shape[1]) // 2
-        padd_right = 120 - padd_left - image.shape[1]
-
-        image = cv2.copyMakeBorder(image, 0, 0, padd_left, padd_right, cv2.BORDER_CONSTANT, value=[255, 255, 255])
-        #cv2.imwrite("{}.jpeg".format(time.time()), image)
-        # cv2.imshow("rsize_for_vino", image)
-        # cv2.waitKey(1)
-
-        return image
-
     @staticmethod
     def decode_sequence(prob):
             symbols = '0123456789abcdefghijklmnopqrstuvwxyz '
@@ -124,33 +102,6 @@ class RecognitionUtils(object):
                 else:
                     prev_pad = True
             return sequence, seq_p
-
-    def augment_data(self, image, components_count):  # use for components_count 1 or 2
-        _, augment_num1 = cv2.threshold(self.augment_num, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        if components_count == 1:
-            image = cv2.resize(image, (38, 28))
-            image = np.concatenate((image, self.augment_num), axis=1)
-            image = np.concatenate((image, self.augment_num), axis=1)
-        if components_count == 2:
-            image = cv2.resize(image, (76, 28))
-            image = np.concatenate((image, self.augment_num), axis=1)
-        return self.add_padding_for_open_vino(image)
-
-    def alter_augment_data(self, image, components_count):  # use for components_count 1 or 2
-        _, augment_num1 = cv2.threshold(self.augment_num2, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-        if components_count == 1:
-            image = cv2.resize(image, (38, 28))
-            image = np.concatenate((image, self.augment_num2), axis=1)
-            image = np.concatenate((image, self.augment_num2), axis=1)
-        if components_count == 2:
-            image = cv2.resize(image, (76, 28))
-            image = np.concatenate((image, self.augment_num2), axis=1)
-        return self.add_padding_for_open_vino(image)
-
-    @staticmethod
-    def add_padding_for_open_vino(image):  # 114x28 to 120x32
-        image = cv2.copyMakeBorder(image, 2, 2, 3, 3, cv2.BORDER_CONSTANT, value=[255, 255, 255])
-        return image
 
 
 class BinarizaionUtils(object):
@@ -222,6 +173,7 @@ class InferenceEngine(object):
         if cpu_extension == "":
             extension_folder = os.path.abspath(os.path.join("tools", "InferenceEngine"))
             if OsUtil.is_windows():
+                # C:\Users\Igor\work\access_city\cloud-bus-recognition\tools\InferenceEngine\cpu_extension.dll
                 self.cpu_extension = os.path.join(extension_folder, "cpu_extension.dll")
                 if not os.listdir(extension_folder):
                     # "IntelSWTools\openvino\inference_engine\bin\intel64\Release"

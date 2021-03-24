@@ -1,3 +1,7 @@
 *.pyc
 .idea
-.jpg
+
+#Directories with temporary files
+/files
+/test_numbers
+/log
