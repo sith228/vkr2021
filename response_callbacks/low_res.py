@@ -12,7 +12,7 @@ from tools.models.openvino_text_detection.text_detection import OVTextDetector
 from tools.models.openvino_vehicle_detection.vehicle_detection import OVVehicleDetector
 
 
-class LowRes(Callback):
+class BusDetectionPipeline(Callback):
     def __init__(self, output_dir, debug=False):
         super().__init__()
         self.debug = debug
