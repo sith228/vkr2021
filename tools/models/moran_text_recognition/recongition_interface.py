@@ -2,7 +2,6 @@ import torch
 from torch.autograd import Variable
 import tools.models.moran_text_recognition.tools.utils as utils
 import tools.models.moran_text_recognition.tools.dataset as dataset
-from PIL import Image
 from collections import OrderedDict
 import cv2
 from tools.models.moran_text_recognition.models.moran import MORAN as moran_recognizer
