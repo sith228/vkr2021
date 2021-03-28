@@ -11,7 +11,7 @@ from tools.models.moran_text_recognition.models.moran import MORAN as moran_reco
 class RecognitionInterface:
     def __init__(self):
         self.model_name = "moran"
-        self.model_path = "tools/models/moran_text_recognition/demo.pth"
+        self.model_path = "tools/models/moran_text_recognition/moran.pth"
 
         self.alphabet = '0:1:2:3:4:5:6:7:8:9:a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t:u:v:w:x:y:z:$'
 
@@ -40,7 +40,7 @@ class RecognitionInterface:
 
     def run_recognition(self, cv2_image):
         converter = utils.strLabelConverterForAttention(self.alphabet, ':')
-        transformer = dataset.resizeNormalize((100, 32))
+        transformer = dataset.ResizeNormalize((100, 32))
         image = cv2.cvtColor(cv2_image, cv2.COLOR_BGR2GRAY)
         image = transformer(image)
 
