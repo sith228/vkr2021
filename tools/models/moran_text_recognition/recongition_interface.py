@@ -41,8 +41,7 @@ class RecognitionInterface:
     def run_recognition(self, cv2_image):
         converter = utils.strLabelConverterForAttention(self.alphabet, ':')
         transformer = dataset.resizeNormalize((100, 32))
-        image = Image.fromarray(cv2.cvtColor(cv2_image, cv2.COLOR_BGR2GRAY))
-        image.convert('L')
+        image = cv2.cvtColor(cv2_image, cv2.COLOR_BGR2GRAY)
         image = transformer(image)
 
         if self.cuda_flag:

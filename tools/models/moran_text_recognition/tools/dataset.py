@@ -6,8 +6,10 @@ from torch.utils.data import sampler
 import lmdb
 import six
 import sys
-from PIL import Image
+from PIL import Image  # TODO: Remove all PIL uses
 import numpy as np
+
+import cv2
 
 class lmdbDataset(Dataset):
 
@@ -74,16 +76,16 @@ class lmdbDataset(Dataset):
 
 class resizeNormalize(object):
 
-    def __init__(self, size, interpolation=Image.BILINEAR):
+    def __init__(self, size, interpolation=cv2.INTER_LINEAR):
         self.size = size
         self.interpolation = interpolation
         self.toTensor = transforms.ToTensor()
 
-    def __call__(self, img):
-        img = img.resize(self.size, self.interpolation)
-        img = self.toTensor(img)
-        img.sub_(0.5).div_(0.5)
-        return img
+    def __call__(self, image):
+        image = cv2.resize(image, self.size, self.interpolation)
+        image = self.toTensor(image)
+        image.sub_(0.5).div_(0.5)
+        return image
 
 class randomSequentialSampler(sampler.Sampler):
 
