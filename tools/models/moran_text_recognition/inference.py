@@ -38,7 +38,7 @@ class Recognizer:
         self.MORAN.eval()
 
         self.converter = utils.strLabelConverterForAttention(alphabet, ':')
-        self.transformer = dataset.resizeNormalize((100, 32))
+        self.transformer = dataset.ResizeNormalize((100, 32))
 
     def preprocess(self, img):
         image = Image.fromarray(img[..., ::-1]).convert('L')

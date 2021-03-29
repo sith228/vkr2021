@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 import numpy as np
 
+
 class MORN(nn.Module):
     def __init__(self, nc, targetH, targetW, inputDataType='torch.cuda.FloatTensor', maxBatch=256, CUDA=True):
         super(MORN, self).__init__()
@@ -44,7 +45,6 @@ class MORN(nn.Module):
         self.grid_y = self.grid[:, :, :, 1].unsqueeze(3)
 
     def forward(self, x, test, enhance=1, debug=False):
-
         if not test and np.random.random() > 0.5:
             return nn.functional.upsample(x, size=(self.targetH, self.targetW), mode='bilinear')
         if not test:

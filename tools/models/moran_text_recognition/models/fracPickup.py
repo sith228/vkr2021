@@ -4,8 +4,8 @@ from torch.autograd import Variable
 import numpy as np
 import numpy.random as npr
 
-class fracPickup(nn.Module):
 
+class fracPickup(nn.Module):
     def __init__(self, CUDA=True):
         super(fracPickup, self).__init__()
         self.cuda = CUDA

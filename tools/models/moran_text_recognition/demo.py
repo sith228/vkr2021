@@ -7,7 +7,7 @@ from collections import OrderedDict
 import cv2
 from models.moran import MORAN
 
-model_path = './demo.pth'
+model_path = 'moran.pth'
 img_path = './demo/0.png'
 alphabet = '0:1:2:3:4:5:6:7:8:9:a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t:u:v:w:x:y:z:$'
 
@@ -35,7 +35,7 @@ for p in MORAN.parameters():
 MORAN.eval()
 
 converter = utils.strLabelConverterForAttention(alphabet, ':')
-transformer = dataset.resizeNormalize((100, 32))
+transformer = dataset.ResizeNormalize((100, 32))
 image = Image.open(img_path).convert('L')
 image = transformer(image)
 
