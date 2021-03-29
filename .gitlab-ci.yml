@@ -1,9 +1,10 @@
 Environment setup:
   stage: .pre
   script:
-    - echo "This is env setup"
+    - apt install python3 python3-pip
+    - pip3 install -r requirements.txt
 
 Testing:
   stage: test
   script:
-    - echo "This is test"
+    - python3 -m pytest
