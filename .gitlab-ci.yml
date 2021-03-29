@@ -10,4 +10,8 @@ before_script:
 Testing:
   stage: test
   script:
-    - python3 -m pytest
+    - python3 -m pytest --junitxml=report.xml
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
