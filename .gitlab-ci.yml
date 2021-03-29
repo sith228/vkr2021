@@ -1,4 +1,9 @@
-test-job1:
+Environment setup:
+  stage: .pre
+  script:
+    - echo "This is env setup"
+
+Testing:
   stage: test
   script:
-    - echo "This job tests something"
+    - echo "This is test"
