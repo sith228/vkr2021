@@ -1,6 +1,4 @@
-Environment setup:
-  stage: .pre
-  script:
+before_script:
     - apt-get -yqq update
     - apt-get -yqq install python3 python3-pip
     - pip3 --no-cache-dir install -r requirements.txt
