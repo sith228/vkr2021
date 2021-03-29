@@ -2,8 +2,8 @@ import torch.nn as nn
 from tools.models.moran_text_recognition.models.morn import MORN
 from tools.models.moran_text_recognition.models.asrn_res import ASRN
 
-class MORAN(nn.Module):
 
+class MORAN(nn.Module):
     def __init__(self, nc, nclass, nh, targetH, targetW, BidirDecoder=False, 
     	inputDataType='torch.cuda.FloatTensor', maxBatch=256, CUDA=True):
         super(MORAN, self).__init__()

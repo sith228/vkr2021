@@ -6,8 +6,8 @@ from torch.autograd import Variable
 from torch.nn.parameter import Parameter
 from tools.models.moran_text_recognition.models.fracPickup import fracPickup
 
-class BidirectionalLSTM(nn.Module):
 
+class BidirectionalLSTM(nn.Module):
     def __init__(self, nIn, nHidden, nOut):
         super(BidirectionalLSTM, self).__init__()
 
@@ -23,6 +23,7 @@ class BidirectionalLSTM(nn.Module):
         output = output.view(T, b, -1)
 
         return output
+
 
 class AttentionCell(nn.Module):
     def __init__(self, input_size, hidden_size, num_embeddings=128, CUDA=True):
@@ -63,6 +64,7 @@ class AttentionCell(nn.Module):
             context = torch.cat([context, cur_embeddings], 1)
             cur_hidden = self.rnn(context, prev_hidden)
             return cur_hidden, alpha
+
 
 class Attention(nn.Module):
     def __init__(self, input_size, hidden_size, num_classes, num_embeddings=128, CUDA=True):
@@ -152,9 +154,10 @@ class Attention(nn.Module):
 
             return probs_res
 
-class Residual_block(nn.Module):
+
+class ResidualBlock(nn.Module):
     def __init__(self, c_in, c_out, stride):
-        super(Residual_block, self).__init__()
+        super(ResidualBlock, self).__init__()
         self.downsample = None
         flag = False
         if isinstance(stride, tuple):
@@ -183,6 +186,7 @@ class Residual_block(nn.Module):
             residual = self.downsample(residual)
         return self.relu(residual + conv2)
 
+
 class ResNet(nn.Module):
     def __init__(self,c_in):
         super(ResNet,self).__init__()
@@ -195,9 +199,9 @@ class ResNet(nn.Module):
 
     def _make_layer(self,c_in,c_out,stride,repeat=3):
         layers = []
-        layers.append(Residual_block(c_in, c_out, stride))
+        layers.append(ResidualBlock(c_in, c_out, stride))
         for i in range(repeat - 1):
-            layers.append(Residual_block(c_out, c_out, 1))
+            layers.append(ResidualBlock(c_out, c_out, 1))
         return nn.Sequential(*layers)
 
     def forward(self,x):
@@ -209,8 +213,8 @@ class ResNet(nn.Module):
         block5 = self.block5(block4)
         return block5
 
-class ASRN(nn.Module):
 
+class ASRN(nn.Module):
     def __init__(self, imgH, nc, nclass, nh, BidirDecoder=False, CUDA=True):
         super(ASRN, self).__init__()
         assert imgH % 16 == 0, 'imgH must be a multiple of 16'

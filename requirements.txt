@@ -1,6 +1,5 @@
 #OpenVNIO ver 2020.1
 
-
 #
 certifi
 chardet
@@ -31,3 +30,10 @@ matplotlib
 Pillow
 torch
 torchvision
+
+#Craft text detector
+craft_text_detector
+
+# Testing
+pytest
+coverage

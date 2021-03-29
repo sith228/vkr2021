@@ -65,22 +65,22 @@ if not torch.cuda.is_available():
 if torch.cuda.is_available() and not opt.cuda:
     print("WARNING: You have a CUDA device, so you should probably run with --cuda")
 
-train_nips_dataset = dataset.lmdbDataset(root=opt.train_nips, 
-    transform=dataset.resizeNormalize((opt.imgW, opt.imgH)), reverse=opt.BidirDecoder)
+train_nips_dataset = dataset.LMDBDataset(root=opt.train_nips,
+                                         transform=dataset.ResizeNormalize((opt.imgW, opt.imgH)), reverse=opt.BidirDecoder)
 assert train_nips_dataset
-train_cvpr_dataset = dataset.lmdbDataset(root=opt.train_cvpr, 
-    transform=dataset.resizeNormalize((opt.imgW, opt.imgH)), reverse=opt.BidirDecoder)
+train_cvpr_dataset = dataset.LMDBDataset(root=opt.train_cvpr,
+                                         transform=dataset.ResizeNormalize((opt.imgW, opt.imgH)), reverse=opt.BidirDecoder)
 assert train_cvpr_dataset
 
 train_dataset = torch.utils.data.ConcatDataset([train_nips_dataset, train_cvpr_dataset])
 
 train_loader = torch.utils.data.DataLoader(
     train_dataset, batch_size=opt.batchSize,
-    shuffle=False, sampler=dataset.randomSequentialSampler(train_dataset, opt.batchSize),
+    shuffle=False, sampler=dataset.RandomSequentialSampler(train_dataset, opt.batchSize),
     num_workers=int(opt.workers))
 
-test_dataset = dataset.lmdbDataset(root=opt.valroot, 
-    transform=dataset.resizeNormalize((opt.imgW, opt.imgH)), reverse=opt.BidirDecoder)
+test_dataset = dataset.LMDBDataset(root=opt.valroot,
+                                   transform=dataset.ResizeNormalize((opt.imgW, opt.imgH)), reverse=opt.BidirDecoder)
 
 nclass = len(opt.alphabet.split(opt.sep))
 nc = 1
