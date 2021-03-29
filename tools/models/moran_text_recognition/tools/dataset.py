@@ -6,11 +6,11 @@ from torch.utils.data import sampler
 import lmdb
 import six
 import sys
-from PIL import Image
-import numpy as np
+from PIL import Image  # TODO: Remove all PIL uses
+import cv2
 
-class lmdbDataset(Dataset):
 
+class LMDBDataset(Dataset):
     def __init__(self, root=None, transform=None, reverse=False, alphabet='0123456789abcdefghijklmnopqrstuvwxyz'):
         self.env = lmdb.open(
             root,
@@ -72,21 +72,20 @@ class lmdbDataset(Dataset):
             return (img, label)
 
 
-class resizeNormalize(object):
-
-    def __init__(self, size, interpolation=Image.BILINEAR):
+class ResizeNormalize(object):
+    def __init__(self, size, interpolation=cv2.INTER_LINEAR):
         self.size = size
         self.interpolation = interpolation
         self.toTensor = transforms.ToTensor()
 
-    def __call__(self, img):
-        img = img.resize(self.size, self.interpolation)
-        img = self.toTensor(img)
-        img.sub_(0.5).div_(0.5)
-        return img
+    def __call__(self, image):
+        image = cv2.resize(image, self.size, self.interpolation)
+        image = self.toTensor(image)
+        image.sub_(0.5).div_(0.5)
+        return image
 
-class randomSequentialSampler(sampler.Sampler):
 
+class RandomSequentialSampler(sampler.Sampler):
     def __init__(self, data_source, batch_size):
         self.num_samples = len(data_source)
         self.batch_size = batch_size
