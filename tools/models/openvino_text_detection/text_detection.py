@@ -7,9 +7,9 @@ import imutils
 import cv2
 import numpy as np
 
-from common.utils import DetectorUtils
-from common.utils import InferenceEngine
-from common.utils import OpenCvInference
+from common.utils.detector_utils import DetectorUtils
+from common.utils.inference_engine import InferenceEngine
+from common.utils.opencv_inference import OpenCvInference
 from common.box import Box
 
 
