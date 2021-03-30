@@ -9,6 +9,7 @@ class OpenCvInference(object):
         self.__width = width
 
     def inference_sync(self, frame: np.ndarray):
+        # TODO: add docstring
         blob = cv2.dnn.blobFromImage(frame, 1, (self.__height, self.__width), ddepth=cv2.CV_8U)
         self.__td_net.setInput(blob)
         out = self.__td_net.forward(self.__td_net.getUnconnectedOutLayersNames())
