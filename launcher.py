@@ -7,21 +7,20 @@ from common.server import Server
 
 class Launcher(object):
     def __init__(self):
-        args = self.__init_arg_parser().parse_args()
-        log.info("Hello, argparcer here")
+        args = self.__get_argument_parser().parse_args()
         self.server = Server(args)
-        log.info("Hello, server init successful")
-
-    def run(self):
-        self.server.run()
+        logger.info("Server initialized")
 
     @staticmethod
-    def __init_arg_parser():
-        parser = argparse.ArgumentParser()
+    def __get_argument_parser():
+        """
+        Returns argument parser
+        :return: argument parser
+        """
 
+        parser = argparse.ArgumentParser()
         # Required arguments
         parser.add_argument("port", type=int, action="store", choices=range(0, 65535), help="Server port number")
-
         # Optional arguments
         parser.add_argument("-detector", default="default", type=str, action="store", choices=["default"],
                             help="Text detection network")
@@ -31,11 +30,18 @@ class Launcher(object):
         parser.add_argument("-output_dir", default="files")
         return parser
 
+    def run(self):
+        """
+        Starts the server
+        """
+
+        self.server.run()
+
 
 if __name__ == "__main__":
     init_logger()
-    log = logging.getLogger("root")
-    log.info("Hello, logger here")
+    logger = logging.getLogger("root")
+    logger.info("Logger initialized")
 
     launch = Launcher()
     launch.run()
