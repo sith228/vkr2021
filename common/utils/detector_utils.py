@@ -4,32 +4,39 @@ import numpy as np
 
 class DetectorUtils(object):
     @staticmethod
-    def min_area_rect(cnt):
-        # TODO: Add docstring
-        rect = cv2.minAreaRect(cnt)
-        w, h = rect[1]
+    def min_area_rect(contour: np.ndarray):
+        """
+        :param contour: Contour
+        :return: Outline angled rectangle
+        """
+        rect = cv2.minAreaRect(contour)
+        width, height = rect[1]
         angle = rect[-1]
         box = cv2.boxPoints(rect)
         box = np.int0(box)
-        return box, w, h, angle
+        return box, width, height, angle
 
     @staticmethod
-    def get_bound_box(cnt):
-        # TODO: ADD docstring
-        x, y, w, h = cv2.boundingRect(cnt)
-        return np.asarray([[x, y], [x + w, y + h]]), w, h
-
-    @staticmethod
-    def order_points(rect):
-        # TODO: ADD docstring
-        """ (x, y)
-            Order: TL, TR, BR, BL
+    def get_bound_box(contour: np.ndarray):
         """
-        tmp = np.zeros_like(rect)
-        sums = rect.sum(axis=1)
-        tmp[0] = rect[np.argmin(sums)]
-        tmp[2] = rect[np.argmax(sums)]
-        diff = np.diff(rect, axis=1)
-        tmp[1] = rect[np.argmin(diff)]
-        tmp[3] = rect[np.argmax(diff)]
-        return tmp
+        :param contour: Contour
+        :return: Outline rectangle
+        """
+        x, y, width, height = cv2.boundingRect(contour)
+        return np.asarray([[x, y], [x + width, y + height]]), width, height
+
+    @staticmethod
+    def order_points(rectangle) -> np.ndarray:
+        """
+        Order: TL, TR, BR, BL
+        :param rectangle: Rectangle
+        :return: Rectangle with ordered point
+        """
+        result = np.zeros_like(rectangle)
+        sums = rectangle.sum(axis=1)
+        result[0] = rectangle[np.argmin(sums)]
+        result[2] = rectangle[np.argmax(sums)]
+        diff = np.diff(rectangle, axis=1)
+        result[1] = rectangle[np.argmin(diff)]
+        result[3] = rectangle[np.argmax(diff)]
+        return result
