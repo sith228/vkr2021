@@ -6,7 +6,7 @@ import copy
 import numpy as np
 
 from response_callbacks.callback import Callback
-from tools.box_validator import BoxValidator
+from utils import BoxValidator
 from tools.models.moran_text_recognition.recongition_interface import RecognitionInterface
 from tools.models.openvino_text_detection.text_detection import OVTextDetector
 from tools.models.openvino_vehicle_detection.vehicle_detection import OVVehicleDetector
