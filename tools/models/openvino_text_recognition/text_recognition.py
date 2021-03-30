@@ -5,7 +5,9 @@ import os
 
 import time
 
-from common.utils import RecognitionUtils, OpenCvInference, InferenceEngine
+from common.utils.recognition_utils import RecognitionUtils
+from common.utils.opencv_inference import OpenCvInference
+from common.utils.inference_engine import InferenceEngine
 
 #TODO Rename file
 
