@@ -245,15 +245,3 @@ class InferenceEngine(object):
             return result
         return outputs[next(iter(self.net.outputs.keys()))]
 
-
-class OpenCvInference(object):
-    def __init__(self, xml, bin, w, h):
-        self.td_net = cv2.dnn.readNet(xml, bin)
-        self.h = h
-        self.w = w
-
-    def inference_sync(self, frame):
-        blob = cv2.dnn.blobFromImage(frame, 1, (self.h, self.w), ddepth=cv2.CV_8U)
-        self.td_net.setInput(blob)
-        out = self.td_net.forward(self.td_net.getUnconnectedOutLayersNames())
-        return out
