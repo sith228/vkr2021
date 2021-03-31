@@ -1,7 +1,11 @@
+# Cache files
 *.pyc
-.idea
 
-#Directories with temporary files
+# IDE files
+.idea*
+.vs*
+
+# Directories with temporary files
 /files
 /test_numbers
 /log

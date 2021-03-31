@@ -12,7 +12,7 @@ class Launcher(object):
         logger.info("Server initialized")
 
     @staticmethod
-    def __get_argument_parser():
+    def __get_argument_parser() -> argparse.ArgumentParser:
         """
         Returns argument parser
         :return: argument parser
