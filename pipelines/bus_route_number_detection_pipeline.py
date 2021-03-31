@@ -5,14 +5,15 @@ import cv2
 import copy
 import numpy as np
 
-from response_callbacks.callback import Callback
-from utils import BoxValidator
+from pipelines.pipeline import Pipeline
+from common.utils.box_validator_utils import BoxValidator
 from tools.models.moran_text_recognition.recongition_interface import RecognitionInterface
 from tools.models.openvino_text_detection.text_detection import OVTextDetector
 from tools.models.openvino_vehicle_detection.vehicle_detection import OVVehicleDetector
 
 
-class BusDetectionPipeline(Callback):
+class BusDetectionPipeline(Pipeline):
+    # TODO: Remove class
     def __init__(self, output_dir, debug=False):
         super().__init__()
         self.debug = debug
@@ -80,7 +81,7 @@ class BusDetectionPipeline(Callback):
                                 strftime('%Y-%m-%d %H-%M-%S[') + str(i) + "].jpg", temp)
         return answer
 
-    def startProcessing(self, data) -> dict:
+    def start_processing(self, data) -> dict:
         image = np.fromstring(data, np.uint8)
         image = cv2.imdecode(image, cv2.IMREAD_COLOR)
 
@@ -102,3 +103,19 @@ class BusDetectionPipeline(Callback):
         result = cv2.imwrite(os.path.join(self.output_dir, file_name), image)
         self.log.info("Save result: {}".format(result))
         return answer
+
+
+class BusRouteNumberDetectionPipeline(Pipeline):
+    def __init__(self):
+        super().__init__()
+        self.text_recognizer  # TODO: Add text recognizer
+        self.text_detector # TODO: Add text detector
+
+    def __is_bus_route_number_detected(self) -> bool:
+        pass
+
+    def __is_bus_route_number_recognized(self) -> bool:
+        pass
+
+    def start_processing(self, data) -> dict:
+        pass
