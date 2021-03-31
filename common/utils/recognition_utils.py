@@ -1,3 +1,5 @@
+from typing import Tuple, Any
+
 import numpy as np
 
 
@@ -14,7 +16,7 @@ class RecognitionUtils(object):
         return e_x / e_x.sum(axis=0)
 
     @staticmethod
-    def decode_sequence(probabilities: np.ndarray):
+    def decode_sequence(probabilities: np.ndarray) -> Tuple[str, Any]:
         """
         Decode sequence
         :param probabilities:

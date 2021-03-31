@@ -1,5 +1,6 @@
 import os
 import sys
+from typing import Any
 
 from openvino.inference_engine import IENetwork, IEPlugin
 import numpy as np
@@ -59,7 +60,7 @@ class InferenceEngine(object):
 
         self.exec_net = self.plugin.load(network=self.net, num_requests=2)
 
-    def inference_sync(self, frame: np.ndarray):
+    def inference_sync(self, frame: np.ndarray) -> Any:
         """
         Starts net
         :param frame: Input image
