@@ -1,10 +1,11 @@
 import cv2
 import numpy as np
+from typing import Any, Tuple
 
 
 class DetectorUtils(object):
     @staticmethod
-    def min_area_rect(contour: np.ndarray):
+    def min_area_rect(contour: np.ndarray) -> Tuple[Any, int, int, int]:
         """
         :param contour: Contour
         :return: Outline angled rectangle
@@ -17,7 +18,7 @@ class DetectorUtils(object):
         return box, width, height, angle
 
     @staticmethod
-    def get_bound_box(contour: np.ndarray):
+    def get_bound_box(contour: np.ndarray) -> Tuple[np.ndarray, int, int]:
         """
         :param contour: Contour
         :return: Outline rectangle

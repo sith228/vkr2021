@@ -1,3 +1,5 @@
+from typing import Any
+
 import cv2
 import numpy as np
 
@@ -8,7 +10,7 @@ class OpenCvInference(object):
         self.__height = height
         self.__width = width
 
-    def inference_sync(self, frame: np.ndarray):
+    def inference_sync(self, frame: np.ndarray) -> Any:
         """
         Starts net
         :param frame: Input image
