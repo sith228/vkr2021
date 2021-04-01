@@ -13,4 +13,10 @@ class BusDoorDetectionPipeline(Pipeline):
         pass
 
     def start_processing(self, data) -> dict:
+        """
+
+        :param data: image, number of image
+        :return: dict {"boxes": List(Box(bound_box: np.ndarray, width: float, height: float,
+                                        probability: float, type: bool))}
+        """
         pass
