@@ -19,8 +19,6 @@ Testing:
   script:
     - coverage run --source=. -m pytest --junitxml=report.xml
     - coverage xml
-    - coverage html
-    - mv htmlcov/ public/
   artifacts:
     when: always
     reports:
