@@ -19,8 +19,24 @@ Testing:
   script:
     - coverage run --source=. -m pytest --junitxml=report.xml
     - coverage xml
+    - coverage html
+    - mv htmlcov/ public/
   artifacts:
     when: always
     reports:
       cobertura: coverage.xml
       junit: report.xml
+
+Make coverage report:
+  stage: deploy
+  dependencies:
+    - Testing
+  script:
+    - coverage html
+    - mv htmlcov/ public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 30 days
+  only:
+    - master
