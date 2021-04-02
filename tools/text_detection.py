@@ -1,8 +1,8 @@
 from tools.models.openvino_text_detection.text_detection import OVTextDetector
-from tools.models.craft_text_segmentation.craft import CRAFT
+from craft_text_detector import Craft
 
 
 class TextDetection(object):
     def __init__(self):
         self.openvino_td = OVTextDetector()
-        self.craft_td = CRAFT()
+        self.craft_td = Craft()
