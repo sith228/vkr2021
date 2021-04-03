@@ -27,7 +27,7 @@ class Server(object):
         # Get image handler
         self.__app.add_url_rule('/load_low_res_image', 'load_low_res_image',
                                 lambda: Response(self.load_low_res_image()),
-                                methods=['GET', 'POST'])
+                                methods=['GET', 'POST'])  # TODO: Change url name
 
     def load_low_res_image(self):
         result = self.__low_res_image_handler.start_processing(request.data)
