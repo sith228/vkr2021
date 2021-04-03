@@ -17,8 +17,7 @@ before_script:
 Testing:
   stage: test
   script:
-    - coverage run --source=. -m pytest --junitxml=report.xml
-    - coverage xml
+    - python3 -m pytest --junitxml=report.xml
   artifacts:
     when: always
     reports:

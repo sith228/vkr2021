@@ -7,9 +7,9 @@ import imutils
 import cv2
 import numpy as np
 
-from common.utils import DetectorUtils
-from common.utils import InferenceEngine
-from common.utils import OpenCvInference
+from common.utils.detector_utils import DetectorUtils
+from common.utils.inference_engine import InferenceEngine
+from common.utils.opencv_inference import OpenCvInference
 from common.box import Box
 
 
@@ -159,7 +159,7 @@ class PixelLinkDecoder(DetectorUtils):
             if w * h < min_area:
                 continue
             bound_box, w, h = self.get_bound_box(cnt)
-            self.bboxes.append(Box(self.order_points(rect), bound_box, cnt, w, h, angle))
+            self.bboxes.append(Box(bound_box, w, h, angle))
         return self.bboxes
 
     def decode(self):
@@ -254,6 +254,7 @@ def main():
         if not has_frame:
             break
         boxes = text_detection.get_boxes(img, min_area=100, min_height=10)
+        #TODO: When will it be True?
         if False:
             text_recognition.run_recognition_holst_boxes(boxes,
                                                          text_recognition.run_vino_recognition)
