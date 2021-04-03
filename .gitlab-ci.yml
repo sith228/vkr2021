@@ -30,9 +30,11 @@ Make coverage report:
   dependencies:
     - Testing
   script:
+    - coverage run --source=. -m pytest
     - coverage html
     - mv htmlcov/ public/
   artifacts:
+    when: always
     paths:
       - public
     expire_in: 30 days
