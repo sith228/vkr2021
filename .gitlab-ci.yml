@@ -8,11 +8,12 @@ cache:
 
 before_script:
     - apt-get -yqq update
-    - DEBIAN_FRONTEND=noninteractive apt-get -yqq install python3 python3-pip libgl1-mesa-glx libglib2.0-0
+    - DEBIAN_FRONTEND=noninteractive apt-get -yqq install unzip python3 python3-pip libgl1-mesa-glx libglib2.0-0
     - pip3 install virtualenv
     - virtualenv venv
     - source venv/bin/activate
     - pip3 install -r requirements.txt
+    - sh ./test_data/download.sh
 
 Testing:
   stage: test

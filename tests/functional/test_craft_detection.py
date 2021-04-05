@@ -5,7 +5,7 @@ import cv2
 class TestCraftDetector:
     def test_craft_detector_on_cpu(self):
         craft = Craft(crop_type="box", cuda=False, refiner=False, rectify=False)
-        image = cv2.imread('./test/text_sample.png')
+        image = cv2.imread('./test_data/text_sample.png')
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         # following two cases are not explained in the original repo
         if image.shape[0] == 2:
