@@ -11,6 +11,7 @@ class BusDetection(object):
         self.__results__ = None
 
     def prediction(self, img):
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.__results__ = self.model(img, size=640)
 
     def result(self) -> List[Box]:
@@ -23,33 +24,3 @@ class BusDetection(object):
                     result_bus.append(Box(c1, c2[0], c2[1]))
 
         return result_bus
-
-
-def main():
-    bus_detector = BusDetection()
-    #Uncommented to test
-    # for f in ['zidane.jpg', 'bus.jpg']:  # download 2 images
-    #     print(f'Downloading {f}...')
-    #     torch.hub.download_url_to_file('https://github.com/ultralytics/yolov5/releases/download/v1.0/' + f, f)
-
-    img2 = cv2.imread('bus.jpg')[:, :, ::-1]  # OpenCV image (BGR to RGB)
-    img_res = cv2.imread('bus.jpg')
-    bus_detector.prediction(img2)
-    for box in bus_detector.result():
-        img_res = cv2.rectangle(img_res, box.bound_box_points, (box.width, box.height), (255, 0, 0), 3, cv2.LINE_AA)
-        cv2.imshow("Test", img_res)
-        cv2.waitKey()
-
-    img2 = cv2.imread('zidane.jpg')[:, :, ::-1]  # OpenCV image (BGR to RGB)
-    img_res = cv2.imread('zidane.jpg')
-    bus_detector.prediction(img2)
-    for box in bus_detector.result():
-        img_res = cv2.rectangle(img_res, box.bound_box_points, (box.width, box.height), (255, 0, 0), 3, cv2.LINE_AA)
-        cv2.imshow("Test", img_res)
-        cv2.waitKey()
-
-    # results.show()
-
-
-if __name__ == "__main__":
-    main()
