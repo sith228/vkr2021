@@ -3,7 +3,7 @@ import os
 
 from flask import Flask, request, Response
 
-from pipelines.bus_route_number_detection_pipeline import BusDetectionPipeline
+from pipelines.bus_detection_pipeline import BusDetectionPipeline
 
 
 class Server(object):
@@ -16,7 +16,7 @@ class Server(object):
         self.__log = logging.getLogger("root")
         self.__log.info("Server init complete")
         self.__debug_output_dir = args.output_dir  # TODO: - delete from here
-        self.__low_res_image_handler = BusDetectionPipeline(args.output_dir, self.__debug)
+        self.__bus_detection_pipeline = BusDetectionPipeline()
 
     def __init_flask(self):
         """
@@ -25,13 +25,11 @@ class Server(object):
 
         """
         # Get image handler
-        self.__app.add_url_rule('/load_low_res_image', 'load_low_res_image',
-                                lambda: Response(self.load_low_res_image()),
-                                methods=['GET', 'POST'])  # TODO: Change url name
+        self.__app.add_url_rule('/bus_detection', 'bus_detection', lambda: Response(self.bus_detection()),
+                                methods=['GET', 'POST'])
 
-    def load_low_res_image(self):
-        result = self.__low_res_image_handler.start_processing(request.data)
-        return result
+    def bus_detection(self):
+        return self.__bus_detection_pipeline.start_processing(request.data)
 
     def run(self):
         os.makedirs(self.__debug_output_dir, exist_ok=True)
