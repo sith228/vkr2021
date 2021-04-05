@@ -1,7 +1,6 @@
 import logging
 
 
-@abs
 class Pipeline(object):
     def __init__(self):
         self.__debug: bool

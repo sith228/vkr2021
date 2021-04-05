@@ -1,11 +1,11 @@
 from pipelines.pipeline import Pipeline
 
 
-class BusRouteNumberDetectionPipeline(Pipeline):
+class BusDetectionPipeline(Pipeline):
     def __init__(self):
         super().__init__()
-        self.bus_detector  # TODO: Add bus detector
-        self.bus_moves_right_detector  # TODO: Add bus moves right detector
+        # self.bus_detector  # TODO: Add bus detector
+        # self.bus_moves_right_detector  # TODO: Add bus moves right detector
 
     def __is_bus_detected(self) -> dict:
         pass

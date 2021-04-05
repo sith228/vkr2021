@@ -17,6 +17,7 @@ before_script:
 Testing:
   stage: test
   script:
+    - python3 launcher.py 5000  # Remove after making server async
     - coverage run --source=. -m pytest --junitxml=report.xml
     - coverage xml
   artifacts:
