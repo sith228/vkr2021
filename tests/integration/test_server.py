@@ -32,4 +32,4 @@ class TestServer:
         images = os.listdir(bus_images_directory)
         image = cv2.imread(bus_images_directory + images[0])
         answer = self.__provide_request(image, ip + ":" + port + "/bus_detection")
-        Metrics.write("test_metric", 10)
+        Metrics.write("test_metric", 9)
