@@ -38,6 +38,8 @@ craft_text_detector
 #YOLO
 PyYAML
 pandas
+seaborn
+tensorboard
 
 # Testing
 pytest
