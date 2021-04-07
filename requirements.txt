@@ -35,6 +35,9 @@ torchvision
 #Craft text detector
 craft_text_detector
 
+#YOLO
+PyYAML
+
 # Testing
 pytest
 coverage
