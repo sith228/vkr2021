@@ -5,14 +5,9 @@ from types import SimpleNamespace
 from urllib.request import Request, urlopen
 
 from common.server import Server
-
+from tests.metrics import Metrics
 
 class TestServer:
-
-    def __init__(self):
-        self.ip = "http://127.0.0.1"
-        self.port = '5000'
-
     @pytest.fixture
     def __setup_server(self):
         server = Server(SimpleNamespace(port=5000, debug=False, output_dir="./debug"))
@@ -30,6 +25,11 @@ class TestServer:
         return answer
 
     def test_bus_detection(self, __setup_server):
-        image = cv2.imread("test_data/mobilenet_data_v1/2019-10-06 13-12-21.jpg")
-        answer = self.__provide_request(image, self.ip + ":" + self.port + "/bus_detection")
+        ip = "http://127.0.0.1"
+        port = "5000"
+        bus_images_directory = "./test_data/coco_bus/train/"
 
+        images = os.listdir(bus_images_directory)
+        image = cv2.imread(bus_images_directory + images[0])
+        answer = self.__provide_request(image, ip + ":" + port + "/bus_detection")
+        Metrics.write("test_metric", 9)
