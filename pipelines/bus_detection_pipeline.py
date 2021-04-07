@@ -28,5 +28,5 @@ class BusDetectionPipeline(Pipeline):
         image = np.fromstring(data, np.uint8)
         image = cv2.imdecode(image, cv2.IMREAD_COLOR)
         self.bus_detector.prediction(image)
-        return {"boxes": self.bus_detector.result()}
+        return {"boxes": self.bus_detector.get_boxes()}
         pass

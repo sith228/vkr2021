@@ -2,6 +2,7 @@ from tools.models.bus_detection_yolo.bus_detection import BusDetection
 import cv2
 import pytest
 
+
 class TestBusDetection:
     @pytest.mark.skip
     def test_bus_detection(self):
