@@ -1,4 +1,4 @@
-from tools.models.bus_detection_yolo.bus_detection import BusDetection
+from tools.models.object_detectors.yolo.bus_detection import BusDetection
 import cv2
 import pytest
 

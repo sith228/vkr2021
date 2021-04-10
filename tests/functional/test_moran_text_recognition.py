@@ -1,4 +1,4 @@
-from tools.models.moran_text_recognition.recongition_interface import RecognitionInterface
+from tools.models.text_recognizers.moran.recongition_interface import RecognitionInterface
 import cv2
 
 

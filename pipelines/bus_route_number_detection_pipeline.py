@@ -7,9 +7,9 @@ import numpy as np
 
 from pipelines.pipeline import Pipeline
 from common.utils.box_validator_utils import BoxValidator
-from tools.models.moran_text_recognition.recongition_interface import RecognitionInterface
-from tools.models.openvino_text_detection.text_detection import OVTextDetector
-from tools.models.openvino_vehicle_detection.vehicle_detection import OVVehicleDetector
+from tools.models.text_recognizers.moran.recongition_interface import RecognitionInterface
+from tools.models.text_detectors.openvino import OVTextDetector
+from tools.models.object_detectors.openvino.vehicle_detection import OVVehicleDetector
 
 
 class BusDetectionPipeline(Pipeline):
