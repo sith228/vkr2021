@@ -59,11 +59,10 @@ class RecognitionInterface:
         utils.loadData(length, l)
         output = self.MORAN(image, length, text, text, test=True, debug=False)
 
-        preds, preds_reverse = output[0]
+        preds = output[0]
         demo = output[1]
 
         _, preds = preds.max(1)
-        _, preds_reverse = preds_reverse.max(1)
 
         sim_preds = converter.decode(preds.data, length.data)
         sim_preds = sim_preds.strip().split('$')[0]
