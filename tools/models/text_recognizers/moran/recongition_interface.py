@@ -10,8 +10,8 @@ from tools.models.text_recognizers.moran.models.moran import MORAN as moran_reco
 
 class RecognitionInterface:
     def __init__(self):
-        self.model_name = "moran"
-        self.model_path = "tools/models/text_recognizers/moran/moran.pth"
+        self.model_name = 'moran'
+        self.model_path = 'tools/models/text_recognizers/moran/moran.pth'
 
         self.alphabet = '0:1:2:3:4:5:6:7:8:9:a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t:u:v:w:x:y:z:$'
 
@@ -30,7 +30,7 @@ class RecognitionInterface:
             state_dict = torch.load(self.model_path, map_location='cpu')
         MORAN_state_dict_rename = OrderedDict()
         for k, v in state_dict.items():
-            name = k.replace("module.", "") # remove `module.`
+            name = k.replace('module.', '') # remove `module.`
             MORAN_state_dict_rename[name] = v
         self.MORAN.load_state_dict(MORAN_state_dict_rename)
 
