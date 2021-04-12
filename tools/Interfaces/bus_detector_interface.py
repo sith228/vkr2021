@@ -1,14 +1,15 @@
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
 from typing import List
 from common.box import Box
+import zope.interface
+
+import numpy as np
 
 
-class IBusDetector(ABC):
+class IBusDetector(zope.interface.Interface):
 
-    @abstractmethod
     def prediction(self, img):
         pass
 
-    @abstractmethod
     def get_boxes(self) -> List[Box]:
         pass
