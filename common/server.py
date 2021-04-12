@@ -4,9 +4,9 @@ import os
 from flask import Flask, request, Response
 
 from pipelines.bus_detection_pipeline import BusDetectionPipeline
+from common.session import Session
 
-
-class Server(object):
+class Server:
     def __init__(self, args):
         # setup Flask
         self.__app = Flask(__name__)
@@ -17,6 +17,11 @@ class Server(object):
         self.__log.info("Server init complete")
         self.__debug_output_dir = args.output_dir  # TODO: - delete from here
         self.__bus_detection_pipeline = BusDetectionPipeline()
+        self.__session = Session(None, None, None, None)
+        self.__session.subscribe_to_result(self.callback)
+
+    def callback(self, message):
+        pass
 
     def __init_flask(self):
         """
