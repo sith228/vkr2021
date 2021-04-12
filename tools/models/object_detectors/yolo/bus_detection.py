@@ -3,12 +3,10 @@ from typing import List
 import torch
 import cv2
 from common.box import Box
-import zope.interface
 from tools.Interfaces.bus_detector_interface import IBusDetector
 
 
-@zope.interface.implementer(IBusDetector)
-class BusDetection(object):
+class BusDetection(IBusDetector):
 
     def __init__(self):
         self.model = torch.hub.load('ultralytics/yolov5', 'yolov5m')

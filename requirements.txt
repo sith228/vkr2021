@@ -44,6 +44,3 @@ tensorboard
 # Testing
 pytest
 coverage
-
-#Interface
-zope
