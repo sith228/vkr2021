@@ -9,3 +9,7 @@
 /files
 /test_numbers
 /log
+
+# Test data
+/test_data
+!/test_data/download.sh

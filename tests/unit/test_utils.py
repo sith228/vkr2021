@@ -24,8 +24,8 @@ class TestsUtils:
 
     @pytest.mark.skip
     def test_opencv_inference(self):
-        model_xml = os.path.join("tools", "models", "openvino_vehicle_detection", "vehicle-detection-adas-0002.xml")
-        model_bin = os.path.join("tools", "models", "openvino_vehicle_detection", "vehicle-detection-adas-0002.bin")
+        model_xml = os.path.join("tools", "models", "openvino", "vehicle-detection-adas-0002.xml")
+        model_bin = os.path.join("tools", "models", "openvino", "vehicle-detection-adas-0002.bin")
         image = cv2.imread('./test/text_sample.png')
 
         opencv_inference = OpenCvInference(model_xml, model_bin, 384, 672)

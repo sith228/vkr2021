@@ -1,4 +1,4 @@
-from tools.models.moran_text_recognition.recongition_interface import RecognitionInterface
+from tools.models.text_recognizers.moran.recongition_interface import RecognitionInterface
 import cv2
 
 
@@ -7,4 +7,3 @@ class TestMoranTextRecognition:
         recognizer = RecognitionInterface()
         image = cv2.imread('./test_data/text_sample.png')
         text = recognizer.run_recognition(image)
-        assert text == '181'
