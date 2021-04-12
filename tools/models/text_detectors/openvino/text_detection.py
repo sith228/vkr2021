@@ -12,6 +12,8 @@ from common.utils.inference_engine import InferenceEngine
 from common.utils.opencv_inference import OpenCvInference
 from common.box import Box
 
+from tools.Interfaces.text_interface import ITextDetector
+
 
 class PixelLinkDecoder(DetectorUtils):
     def __init__(self, image, pixel_scores, link_scores,
@@ -80,13 +82,13 @@ class PixelLinkDecoder(DetectorUtils):
             return out
 
     def _set_pixel_scores(self, pixel_scores):
-        "get softmaxed properly shaped pixel scores"
+        """get softmaxed properly shaped pixel scores"""
         tmp = np.transpose(pixel_scores, (0, 2, 3, 1))
         return self._softmax(tmp, axis=-1)[0, :, :, 1]
 
     def _set_link_scores(self, link_scores):
-	
-        "get softmaxed properly shaped links scores"
+
+        """get softmaxed properly shaped links scores"""
         tmp = np.transpose(link_scores, (0, 2, 3, 1))
         tmp_reshaped = tmp.reshape(tmp.shape[:-1] + (8, 2))
         return self._softmax(tmp_reshaped, axis=-1)[0, :, :, :, 1]
@@ -180,7 +182,7 @@ class PixelLinkDecoder(DetectorUtils):
         for box in self.bboxes:
             cv2.drawContours(img_tmp, [box.box_points], 0, (50, 200, 50), 3)
 
-        #cv2.imshow('Detected text', cv2.resize(img_tmp, (640, 480)))
+        # cv2.imshow('Detected text', cv2.resize(img_tmp, (640, 480)))
         cv2.imshow('Detected text', imutils.resize(img_tmp, height=500))
         cv2.waitKey(1)
         # cv2.destroyAllWindows()
@@ -188,20 +190,18 @@ class PixelLinkDecoder(DetectorUtils):
         #     cv2.destroyAllWindows()
 
 
-class OVTextDetector(object):
+class OVTextDetector(ITextDetector):
     # load models
     def __init__(self, ie=True):
-        print("Load text-detection-0002.xml")
-
-        model_xml = os.path.join("tools", "models", "openvino", "text-detection-0002.xml")
-        model_bin = os.path.join("tools", "models", "openvino", "text-detection-0002.bin")
-
-        print(os.path.exists(model_bin))
-        print(os.path.exists(model_xml))
+        model_xml = os.path.join('tools', 'models', 'openvino', 'text-detection-0002.xml')
+        model_bin = os.path.join('tools', 'models', 'openvino', 'text-detection-0002.bin')
 
         self.w = 768
         self.h = 768
         self.debug2 = False
+        self.__dcd__ = None
+        self.__min_area__ = 100
+        self.__min_height__ = 10
 
         if not ie:
             self.opencv = OpenCvInference(model_xml, model_bin, self.w, self.h)
@@ -212,19 +212,15 @@ class OVTextDetector(object):
 
         self.td_net = cv2.dnn.readNet(model_xml, model_bin)
 
-    # run detector on image
-    def get_boxes(self, image, min_area, min_height):
-        start_time = time.time()
-        pixel_scores, link_scores = self.inference(cv2.resize(image, (self.h, self.w)))
-        print((time.time() - start_time)*1e+3, " text-detection-0002 runtime")
-
-        dcd = PixelLinkDecoder(image, pixel_scores, link_scores,
-                               pixel_conf_threshold=0.8, link_conf_threshold=0.8)
-        dcd.decode()
-        boxes = dcd.mask_to_boxes(min_area, min_height)
-        if self.debug2:
-            dcd.plot_result(image.copy())
+    def get_boxes(self):
+        boxes = self.__dcd__.mask_to_boxes(self.__min_area__, self.__min_height__)
         return boxes
+
+    def prediction(self, image):
+        pixel_scores, link_scores = self.inference(cv2.resize(image, (self.h, self.w)))
+        self.__dcd__ = PixelLinkDecoder(image, pixel_scores, link_scores,
+                                        pixel_conf_threshold=0.8, link_conf_threshold=0.8)
+        self.__dcd__.decode()
 
 
 def main():
@@ -254,11 +250,11 @@ def main():
         if not has_frame:
             break
         boxes = text_detection.get_boxes(img, min_area=100, min_height=10)
-        #TODO: When will it be True?
+        # TODO: When will it be True?
         if False:
             text_recognition.run_recognition_holst_boxes(boxes,
                                                          text_recognition.run_vino_recognition)
-        print("detection time "+str((time.time() - startrTime)*1e+3))
+        print("detection time " + str((time.time() - startrTime) * 1e+3))
         # blob = cv2.dnn.blobFromImage(img, 1, (384, 384), ddepth=cv2.CV_8U)
         # td.setInput(blob)
         # a, b = td.forward(td.getUnconnectedOutLayersNames())

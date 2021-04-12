@@ -6,18 +6,18 @@ from common.box import Box
 class ITextDetector(ABC):
     @abstractmethod
     def prediction(self, image):
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def get_boxes(self) -> List[Box]:
-        pass
+        raise NotImplementedError
 
 
 class ITextRecognizer(ABC):
     @abstractmethod
     def prediction(self, image):
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def get_recognized_text(self) -> AnyStr:
-        pass
+        raise NotImplementedError
