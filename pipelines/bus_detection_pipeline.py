@@ -1,15 +1,14 @@
 from pipelines.pipeline import Pipeline
-from tools.models.bus_detection_yolo.bus_detection import BusDetection
+from tools.models.object_detector import ObjectDetectorFactory
 
 import cv2
-import copy
 import numpy as np
 
 
 class BusDetectionPipeline(Pipeline):
     def __init__(self):
         super().__init__()
-        self.bus_detector = BusDetection()
+        self.bus_detector = ObjectDetectorFactory.get('yolo')
         # self.bus_moves_right_detector  # TODO: Add bus moves right detector
 
     def __is_bus_detected(self) -> dict:
