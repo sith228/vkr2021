@@ -12,7 +12,7 @@ from common.utils.inference_engine import InferenceEngine
 from common.utils.opencv_inference import OpenCvInference
 from common.box import Box
 
-from tools.Interfaces.text_interface import ITextDetector
+from tools.Interfaces.text_detector_interface import ITextDetector
 
 
 class PixelLinkDecoder(DetectorUtils):
