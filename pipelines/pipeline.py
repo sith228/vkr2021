@@ -1,8 +1,11 @@
 import logging
 
+from common.event.interruptible import Interruptible
 
-class Pipeline(object):
+
+class Pipeline(Interruptible):
     def __init__(self):
+        super().__init__()
         self.__debug: bool
         self.__debug_output_dir: str
         self.log = logging.getLogger("root")
