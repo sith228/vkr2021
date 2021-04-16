@@ -161,7 +161,7 @@ class PixelLinkDecoder(DetectorUtils):
             if w * h < min_area:
                 continue
             bound_box, w, h = self.get_bound_box(cnt)
-            self.bboxes.append(Box(bound_box, w, h, angle))
+            self.bboxes.append(Box(bound_box, w, h, self.mask))
         return self.bboxes
 
     def decode(self):
