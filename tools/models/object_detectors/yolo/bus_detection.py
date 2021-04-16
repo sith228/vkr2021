@@ -2,7 +2,7 @@ from typing import List
 
 import torch
 import cv2
-from common.box import Box
+from common.bus_box import Box, BusBox
 from tools.Interfaces.bus_detector_interface import IBusDetector
 
 
@@ -19,7 +19,7 @@ class BusDetection(IBusDetector):
                 label = f'{self.__results__.names[int(cls)]}'
                 if label == "bus":
                     c1, c2 = (int(box[0]), int(box[1])), (int(box[2]), int(box[3]))
-                    result_bus.append(Box(c1, c2[0], c2[1]))
+                    result_bus.append(BusBox(c1, c2[0], c2[1]))
 
         return result_bus
 
