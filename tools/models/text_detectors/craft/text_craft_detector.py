@@ -3,8 +3,8 @@ from typing import List
 from craft_text_detector import Craft, get_prediction
 import cv2
 
-from common.box.text_box import TextBox, Box
-from tools.Interfaces.text_interface import ITextDetector
+from common.box import Box
+from tools.Interfaces.text_detector_interface import ITextDetector
 
 
 class CraftDetection(ITextDetector):
