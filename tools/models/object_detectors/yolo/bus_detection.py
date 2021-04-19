@@ -3,7 +3,7 @@ from typing import List
 import torch
 import cv2
 import numpy as np
-from common.bus_box import Box, BusBox
+from common.box.bus_box import Box, BusBox
 from tools.Interfaces.bus_detector_interface import IBusDetector
 
 
