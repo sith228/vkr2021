@@ -3,7 +3,7 @@ from typing import List
 from craft_text_detector import Craft, get_prediction
 import cv2
 
-from common.box import Box
+from common.box import Box, TextBox
 from tools.Interfaces.text_detector_interface import ITextDetector
 
 
