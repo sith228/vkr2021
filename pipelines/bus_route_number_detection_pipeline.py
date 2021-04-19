@@ -37,16 +37,14 @@ class BusRouteNumberDetectionPipeline(Pipeline):
 
         # Route number detection
         for bus_box in bus_boxes:
-            bus_image = image[,:,]
-            self.__text_detector.prediction(bus_image)
+            self.__text_detector.prediction(bus_box.get_cropped_image())
             route_number_boxes = self.__text_detector.get_boxes()
             # TODO: Synchronise boxes with session
 
             # Route number recognition
             for route_number_box in route_number_boxes:
-                route_number_image = bus_image[,:,]
-                self.__text_recognizer.prediction(route_number_image)
-                # TODO: Save result text
+                self.__text_recognizer.prediction(route_number_box.get_cropped_image())
+                route_number_box.set_text(self.__text_recognizer.get_result())
                 # TODO: Synchronise boxes with session
 
         return bus_boxes
