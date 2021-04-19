@@ -3,16 +3,18 @@ from typing import List
 from craft_text_detector import Craft, get_prediction
 import cv2
 
-from common.box import Box
-from tools.Interfaces.text_detector_interface import ITextDetector
+from common.box.text_box import TextBox, Box
+from tools.Interfaces.text_interface import ITextDetector
 
 
 class CraftDetection(ITextDetector):
     def __init__(self, cuda: bool):
         self.__model__ = Craft(crop_type="box", cuda=cuda, refiner=False, rectify=False)
         self.__results__ = None
+        self.__image__ = None
 
     def prediction(self, image):
+        self.__image__ = image.view()
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         if image.shape[0] == 2:
             image = image[0]
@@ -32,6 +34,6 @@ class CraftDetection(ITextDetector):
     def get_boxes(self) -> List[Box]:
         result_text_box = []
         for box in self.__results__['boxes']:
-            result_text_box.append(Box((box[0][0], box[0][1]), box[2][0] - box[0][0], box[2][1] - box[0][1]))
+            result_text_box.append(TextBox((box[0][0], box[0][1]), box[2][0] - box[0][0], box[2][1] - box[0][1], self.__image__))
 
         return result_text_box
