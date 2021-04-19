@@ -7,7 +7,7 @@ import numpy as np
 
 
 class Box:
-    def __init__(self, bound_box_coordinates, width, height, image: np.ndarray):
+    def __init__(self, bound_box_coordinates: Tuple[int, int], width: int, height: int, image: np.ndarray):
         """
         :param bound_box_coordinates: Bound box
         :param width: Width
@@ -16,9 +16,9 @@ class Box:
         """
         self.bound_box_coordinates: Tuple[int, int] = bound_box_coordinates
         self.__check_list__ = {}
-        self.height = height  # height of box
-        self.width = width  # width of box
-        self.__list_of_inside_boxes__ = []  # contain other boxes
+        self.height: int = height  # height of box
+        self.width: int = width  # width of box
+        self.__list_of_inside_boxes__: List[Box] = []  # contain other boxes
         self.__image__: np.ndarray = image.view(image.dtype)
 
     @staticmethod
@@ -43,7 +43,7 @@ class Box:
         """
         return self.bound_box_coordinates[0], self.bound_box_coordinates[1], self.width, self.height
 
-    def insert_boxes(self, boxes_list):
+    def insert_boxes(self, boxes_list: List[Box]):
         for box in boxes_list:
             self.__list_of_inside_boxes__.append(box)
 
