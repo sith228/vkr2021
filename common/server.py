@@ -5,6 +5,8 @@ from flask import Flask, request, Response
 
 from pipelines.bus_detection_pipeline import BusDetectionPipeline
 from common.session import Session
+from pipelines.bus_route_number_recognition_pipeline import BusRouteNumberRecognitionPipeline
+
 
 class Server:
     def __init__(self, args):
@@ -17,6 +19,7 @@ class Server:
         self.__log.info("Server init complete")
         self.__debug_output_dir = args.output_dir  # TODO: - delete from here
         self.__bus_detection_pipeline = BusDetectionPipeline()
+        self.__bus_route_number_recognition_pipeline = BusRouteNumberRecognitionPipeline()
         self.__session = Session(None, None, None)
         self.__session.add_callback(self.callback)
 
@@ -32,9 +35,14 @@ class Server:
         # Get image handler
         self.__app.add_url_rule('/bus_detection', 'bus_detection', lambda: Response(self.bus_detection()),
                                 methods=['GET', 'POST'])
+        self.__app.add_url_rule('/bus_route_number_detection', 'bus_route_number_detection',
+                                lambda: Response(self.bus_route_number_recognition()), methods=['GET', 'POST'])
 
     def bus_detection(self):
         return self.__bus_detection_pipeline.start_processing(request.data)
+
+    def bus_route_number_recognition(self):
+        return self.__bus_route_number_recognition_pipeline.start_processing(request.data)
 
     def run(self):
         os.makedirs(self.__debug_output_dir, exist_ok=True)

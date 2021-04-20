@@ -1,6 +1,6 @@
 import logging
 
-from common.event.interruptible import Interruptible
+from common.event import Interruptible
 
 
 class Pipeline(Interruptible):

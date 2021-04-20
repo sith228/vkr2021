@@ -2,15 +2,15 @@ from collections import deque
 from typing import List
 
 from common.box import Box
-from common.event.publisher import Publisher
+from common.event import Publisher
 from pipelines.bus_detection_pipeline import BusDetectionPipeline
 from pipelines.bus_door_detection_pipeline import BusDoorDetectionPipeline
-from pipelines.bus_route_number_detection_pipeline import BusRouteNumberDetectionPipeline
+from pipelines.bus_route_number_recognition_pipeline import BusRouteNumberRecognitionPipeline
 
 
 class Session(Publisher):
     def __init__(self, bus_detection_pipeline: BusDetectionPipeline,
-                 route_detection_pipeline: BusRouteNumberDetectionPipeline,
+                 route_detection_pipeline: BusRouteNumberRecognitionPipeline,
                  door_detection_pipeline: BusDoorDetectionPipeline):
         super().__init__()
         self.__status = {'bus_detected': False,

@@ -1,3 +1,6 @@
+from typing import Dict
+
+from common.box import BusBox
 from pipelines.pipeline import Pipeline
 from tools.models.object_detector import ObjectDetectorFactory
 
@@ -17,14 +20,13 @@ class BusDetectionPipeline(Pipeline):
     def __is_bus_moves_right(self) -> dict:
         pass
 
-    def start_processing(self, data) -> dict:
+    def start_processing(self, data) -> Dict[str, BusBox]:
         """
-
-        :param data: image, number of image
-        :return: dict {"boxes": List(Box(bound_box: np.ndarray, width: float, height: float,
-                                        probability: float, label='Bus'))}
+        Detects buses
+        :param data:
+        :return:  Dictionary with list of bus boxes inside
         """
         image = np.fromstring(data, np.uint8)
         image = cv2.imdecode(image, cv2.IMREAD_COLOR)
         self.bus_detector.prediction(image)
-        return {"boxes": self.bus_detector.get_boxes()}
+        return {'boxes': self.bus_detector.get_boxes()}
