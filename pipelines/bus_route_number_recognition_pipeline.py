@@ -40,6 +40,7 @@ class BusRouteNumberRecognitionPipeline(Pipeline):
         for bus_box in bus_boxes:
             self.__text_detector.prediction(bus_box.get_cropped_image())
             route_number_boxes = self.__text_detector.get_boxes()
+            bus_box.insert_boxes(route_number_boxes)
             # TODO: Synchronise boxes with session
 
             # Route number recognition
