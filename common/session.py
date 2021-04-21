@@ -14,14 +14,25 @@ class Session(Publisher):
         super().__init__()
 
         self.__bus_detection_pipeline = BusDetectionPipeline()
+
         self.__bus_door_detection_pipeline = BusDoorDetectionPipeline()
+
+        # Setup bus route number recognition pipeline
         self.__bus_route_number_recognition_pipeline = BusRouteNumberRecognitionPipeline()
+        self.__bus_route_number_recognition_pipeline.add_handler('update_bus_boxes',
+                                                                 self.__interruption_update_bus_boxes)
+        self.__bus_route_number_recognition_pipeline.add_handler('update_route_number_boxes',
+                                                                 self.__interruption_update_route_number_boxes)
+        self.__bus_route_number_recognition_pipeline.add_handler('update_route_number_box_text',
+                                                                 self.__interruption_update_route_number_box_text)
+        self.__bus_route_number_recognition_pipeline.add_handler('update_bus_route_number',
+                                                                 self.__interruption_update_bus_route_number)
 
         self.__tasks = deque(maxlen=8)  # TODO: Setup deque max len with constant
         self.__tasks_semaphore = Semaphore(0)
-        self.__thread = Thread(self.run())
+        self.__thread = Thread(target=self.run)
 
-        self.__thread.run()
+        self.__thread.start()
 
     # Tasks
     def __run_bus_detection_pipeline(self, data):  # TODO: use image except data
