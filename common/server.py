@@ -20,7 +20,7 @@ class Server:
         self.__debug_output_dir = args.output_dir  # TODO: - delete from here
         self.__bus_detection_pipeline = BusDetectionPipeline()
         self.__bus_route_number_recognition_pipeline = BusRouteNumberRecognitionPipeline()
-        self.__session = Session(None, None, None)
+        self.__session = Session()
         self.__session.add_callback(self.callback)
 
     def callback(self, message):
