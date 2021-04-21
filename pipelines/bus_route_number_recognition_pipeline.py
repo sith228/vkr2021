@@ -1,7 +1,7 @@
 from typing import Dict, Any
 
-import numpy as np
 import cv2
+import numpy as np
 
 from pipelines.pipeline import Pipeline
 from tools.models.object_detector import ObjectDetectorFactory
