@@ -19,7 +19,7 @@ Testing:
   stage: test
   script:
     - python3 launcher.py 5000 &  # Remove after making server async
-    - coverage run --source=. -m pytest --junitxml=report.xml
+    - coverage run --source=. -m pytest --ignore=./venv --junitxml=report.xml
     - coverage xml
   artifacts:
     when: always

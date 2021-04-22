@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 
 from common.event import Interruptible
 
@@ -10,5 +11,5 @@ class Pipeline(Interruptible):
         self.__debug_output_dir: str
         self.log = logging.getLogger("root")
 
-    def start_processing(self, data) -> dict:
+    def start_processing(self, image: np.ndarray) -> dict:
         raise NotImplementedError

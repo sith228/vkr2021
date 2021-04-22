@@ -2,8 +2,11 @@ from collections import deque
 from threading import Semaphore, Thread
 from typing import List
 
+import numpy as np
+
 from common.box import BusBox, TextBox
 from common.event import Publisher
+from common.task import Task, Mode
 from pipelines.bus_detection_pipeline import BusDetectionPipeline
 from pipelines.bus_door_detection_pipeline import BusDoorDetectionPipeline
 from pipelines.bus_route_number_recognition_pipeline import BusRouteNumberRecognitionPipeline
@@ -35,22 +38,27 @@ class Session(Publisher):
         self.__thread.start()
 
     # Tasks
-    def __run_bus_detection_pipeline(self, data):  # TODO: use image except data
-        self.__bus_detection_pipeline.start_processing(data)
+    def __run_bus_detection_pipeline(self, image: np.ndarray):
+        self.__bus_detection_pipeline.start_processing(image)
 
-    def __run_bus_door_detection_pipeline(self, data):  # TODO: use image except data
-        self.__bus_door_detection_pipeline.start_processing(data)
+    def __run_bus_door_detection_pipeline(self, image: np.ndarray):
+        self.__bus_door_detection_pipeline.start_processing(image)
 
-    def __run_bus_route_number_recognition_pipeline(self, data):  # TODO: use image except data
-        self.__bus_route_number_recognition_pipeline.start_processing(data)
+    def __run_bus_route_number_recognition_pipeline(self, image: np.ndarray):
+        self.__bus_route_number_recognition_pipeline.start_processing(image)
 
     def run(self):
         while True:
             self.__tasks_semaphore.acquire()
             task = self.__tasks.pop()
-            # TODO: Run specific task
+            if task.mode == Mode.BUS_DETECTION:
+                self.__run_bus_detection_pipeline(task.image)
+            elif task.mode == Mode.BUS_ROUTE_NUMBER_RECOGNITION:
+                self.__run_bus_route_number_recognition_pipeline(task.image)
+            elif task.mode == Mode.BUS_DOOR_DETECTION:
+                self.__run_bus_route_number_recognition_pipeline(task.image)
 
-    def push_task(self, task):
+    def push_task(self, task: Task):
         self.__tasks.append(task)
         self.__tasks_semaphore.release()
 

@@ -12,7 +12,7 @@ class BusDoorDetectionPipeline(Pipeline):
     def __is_bus_door_open(self) -> bool:
         pass
 
-    def start_processing(self, data) -> dict:
+    def start_processing(self, image) -> dict:
         """
 
         :param data: image, number of image
