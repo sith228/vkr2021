@@ -11,7 +11,7 @@ from tests.metrics import Metrics
 class TestServer:
     @pytest.fixture
     def __setup_server(self):
-        server = Server(SimpleNamespace(port=5000, debug=False, output_dir="./debug"))
+        # server = Server(SimpleNamespace(port=5000, debug=False, output_dir="./debug"))
         # server.run()  # TODO: Run server async
 
         yield
