@@ -1,6 +1,9 @@
 import logging
 import os
 
+import numpy as np
+import cv2
+
 from flask import Flask, request, Response
 
 from pipelines.bus_detection_pipeline import BusDetectionPipeline
@@ -20,7 +23,7 @@ class Server:
         self.__debug_output_dir = args.output_dir  # TODO: - delete from here
         self.__bus_detection_pipeline = BusDetectionPipeline()
         self.__bus_route_number_recognition_pipeline = BusRouteNumberRecognitionPipeline()
-        self.__session = Session(None, None, None)
+        self.__session = Session()
         self.__session.add_callback(self.callback)
 
     def callback(self, message):
@@ -39,10 +42,14 @@ class Server:
                                 lambda: Response(self.bus_route_number_recognition()), methods=['GET', 'POST'])
 
     def bus_detection(self):
-        return self.__bus_detection_pipeline.start_processing(request.data)
+        image = np.fromstring(request.data, np.uint8)
+        image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+        return self.__bus_detection_pipeline.start_processing(image)
 
     def bus_route_number_recognition(self):
-        return self.__bus_route_number_recognition_pipeline.start_processing(request.data)
+        image = np.fromstring(request.data, np.uint8)
+        image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+        return self.__bus_route_number_recognition_pipeline.start_processing(image)
 
     def run(self):
         os.makedirs(self.__debug_output_dir, exist_ok=True)

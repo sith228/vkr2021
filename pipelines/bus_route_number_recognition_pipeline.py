@@ -1,7 +1,7 @@
 from typing import Dict, Any
 
-import numpy as np
 import cv2
+import numpy as np
 
 from pipelines.pipeline import Pipeline
 from tools.models.object_detector import ObjectDetectorFactory
@@ -22,14 +22,12 @@ class BusRouteNumberRecognitionPipeline(Pipeline):
     def __is_bus_route_number_recognized(self) -> bool:
         pass
 
-    def start_processing(self, data) -> Dict[str, Any]:
+    def start_processing(self, image: np.ndarray) -> Dict[str, Any]:
         """
         Detects and recognizes bus route number
-        :param data:
+        :param image:
         :return: Dictionary with bus
         """
-        image = np.fromstring(data, np.uint8)
-        image = cv2.imdecode(image, cv2.IMREAD_COLOR)
 
         # Bus detection
         self.__bus_detector.prediction(image)

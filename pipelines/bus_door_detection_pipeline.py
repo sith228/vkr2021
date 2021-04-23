@@ -4,7 +4,7 @@ from pipelines.pipeline import Pipeline
 class BusDoorDetectionPipeline(Pipeline):
     def __init__(self):
         super().__init__()
-        self.door_detector  # TODO: Add detector
+        # self.door_detector  # TODO: Add detector
 
     def __is_bus_door_detected(self) -> bool:
         pass
@@ -12,7 +12,7 @@ class BusDoorDetectionPipeline(Pipeline):
     def __is_bus_door_open(self) -> bool:
         pass
 
-    def start_processing(self, data) -> dict:
+    def start_processing(self, image) -> dict:
         """
 
         :param data: image, number of image

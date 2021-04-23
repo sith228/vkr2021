@@ -4,7 +4,6 @@ from common.box import BusBox
 from pipelines.pipeline import Pipeline
 from tools.models.object_detector import ObjectDetectorFactory
 
-import cv2
 import numpy as np
 
 
@@ -20,13 +19,11 @@ class BusDetectionPipeline(Pipeline):
     def __is_bus_moves_right(self) -> dict:
         pass
 
-    def start_processing(self, data) -> Dict[str, BusBox]:
+    def start_processing(self, image: np.ndarray) -> Dict[str, BusBox]:
         """
         Detects buses
-        :param data:
+        :param image:
         :return:  Dictionary with list of bus boxes inside
         """
-        image = np.fromstring(data, np.uint8)
-        image = cv2.imdecode(image, cv2.IMREAD_COLOR)
         self.bus_detector.prediction(image)
         return {'boxes': self.bus_detector.get_boxes()}

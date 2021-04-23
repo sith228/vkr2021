@@ -1,59 +1,76 @@
 from collections import deque
+from threading import Semaphore, Thread
 from typing import List
 
-from common.box import Box
+import numpy as np
+
+from common.box import BusBox, TextBox
 from common.event import Publisher
+from common.task import Task, Mode
 from pipelines.bus_detection_pipeline import BusDetectionPipeline
 from pipelines.bus_door_detection_pipeline import BusDoorDetectionPipeline
 from pipelines.bus_route_number_recognition_pipeline import BusRouteNumberRecognitionPipeline
 
 
 class Session(Publisher):
-    def __init__(self, bus_detection_pipeline: BusDetectionPipeline,
-                 route_detection_pipeline: BusRouteNumberRecognitionPipeline,
-                 door_detection_pipeline: BusDoorDetectionPipeline):
+    def __init__(self):
         super().__init__()
-        self.__status = {'bus_detected': False,
-                         'route_number_detected': False,
-                         'route_number_recognized': False,
-                         'door_detected': False}
-        self.__images_to_process = deque()
-        self.__bus_detection_pipeline = bus_detection_pipeline
-        self.__route_detection_pipeline = route_detection_pipeline
-        self.__door_detection_pipeline = door_detection_pipeline
-        self.__updated = False
-        #                             # dict {"boxes": List(Box(bound_box: np.ndarray, width: float, height: float,
-        #                             # probability: float, label='Bus'))}
-        '''
-        LIMITATION - only one bus arrived at bus stop
-        So max length if __boxes_array == 1
-        '''
-        self.__boxes_array: List[Box] = []  # Store boxes of buses
 
-    def append_image(self, image):
-        self.__images_to_process.append(image)
+        self.__bus_detection_pipeline = BusDetectionPipeline()
 
-    def run_pipelines(self):
-        image_to_process = self.__images_to_process.pop()
-        if self.__status['bus_detected']:
-            if not self.__status['route_number_detected']:
-                self.__route_detection_pipeline.start_processing(image_to_process)
-                if not self.__status['route_number_recognized']:
-                    self.__route_detection_pipeline.start_processing(image_to_process)
-            else:
-                self.__door_detection_pipeline.start_processing(image_to_process)
-        else:
-            self.__bus_detection_pipeline.start_processing(image_to_process)
+        self.__bus_door_detection_pipeline = BusDoorDetectionPipeline()
 
-    def on_result(self, message):
-        self.__updated = True
-        # send answer to phone self.server.return_result(id, message)
-        # TODO Run in new thread
-        self.broadcast(message)
+        # Setup bus route number recognition pipeline
+        self.__bus_route_number_recognition_pipeline = BusRouteNumberRecognitionPipeline()
+        self.__bus_route_number_recognition_pipeline.add_handler('update_bus_boxes',
+                                                                 self.__interruption_update_bus_boxes)
+        self.__bus_route_number_recognition_pipeline.add_handler('update_route_number_boxes',
+                                                                 self.__interruption_update_route_number_boxes)
+        self.__bus_route_number_recognition_pipeline.add_handler('update_route_number_box_text',
+                                                                 self.__interruption_update_route_number_box_text)
+        self.__bus_route_number_recognition_pipeline.add_handler('update_bus_route_number',
+                                                                 self.__interruption_update_bus_route_number)
 
-    def get_result(self):
-        if self.__updated:
-            # TODO return last state
-            return self.__status
-        else:
-            return False
+        self.__tasks = deque(maxlen=8)  # TODO: Setup deque max len with constant
+        self.__tasks_semaphore = Semaphore(0)
+        self.__thread = Thread(target=self.run)
+
+        self.__thread.start()
+
+    # Tasks
+    def __run_bus_detection_pipeline(self, image: np.ndarray):
+        self.__bus_detection_pipeline.start_processing(image)
+
+    def __run_bus_door_detection_pipeline(self, image: np.ndarray):
+        self.__bus_door_detection_pipeline.start_processing(image)
+
+    def __run_bus_route_number_recognition_pipeline(self, image: np.ndarray):
+        self.__bus_route_number_recognition_pipeline.start_processing(image)
+
+    def run(self):
+        while True:
+            self.__tasks_semaphore.acquire()
+            task = self.__tasks.pop()
+            if task.mode == Mode.BUS_DETECTION:
+                self.__run_bus_detection_pipeline(task.image)
+            elif task.mode == Mode.BUS_ROUTE_NUMBER_RECOGNITION:
+                self.__run_bus_route_number_recognition_pipeline(task.image)
+            elif task.mode == Mode.BUS_DOOR_DETECTION:
+                self.__run_bus_route_number_recognition_pipeline(task.image)
+
+    def push_task(self, task: Task):
+        self.__tasks.append(task)
+        self.__tasks_semaphore.release()
+
+    # Interruptions
+    def __interruption_update_bus_boxes(self, bus_boxes: List[BusBox]):
+        pass
+
+    def __interruption_update_route_number_boxes(self, route_number_boxes: List[TextBox]):
+        pass
+
+    def __interruption_update_route_number_box_text(self, route_number_box: TextBox):
+        pass
+
+    def __interruption_update_bus_route_number(self, bus_boxes: List[BusBox]):
+        pass
