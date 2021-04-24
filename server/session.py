@@ -37,7 +37,7 @@ class Session(Publisher):
 
         self.__thread.start()
 
-    # Tasks
+    # Tasks ============================================================================================================
     def __run_bus_detection_pipeline(self, image: np.ndarray):
         self.__bus_detection_pipeline.start_processing(image)
 
@@ -62,7 +62,7 @@ class Session(Publisher):
         self.__tasks.append(task)
         self.__tasks_semaphore.release()
 
-    # Interruptions
+    # Interruptions ====================================================================================================
     def __interruption_update_bus_boxes(self, bus_boxes: List[BusBox]):
         pass
 
