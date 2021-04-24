@@ -39,7 +39,7 @@
 | :-----------:| :-------------: |
 | Height       | 0               |
 | Width        | 2               |
-| image format | 4               |
+| Image format | 4               |
 | Image        | 5               |
 
 #### Image formats
