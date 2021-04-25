@@ -25,6 +25,7 @@ class TestServer:
         # TODO: Add answer decode
         return answer
 
+    @pytest.mark.skip
     def test_bus_detection(self, __setup_server):
         ip = 'http://127.0.0.1'
         port = '5000'
@@ -35,6 +36,7 @@ class TestServer:
         answer = self.__provide_request(image, ip + ':' + port + '/bus_detection')
         Metrics.write('test_metric', 9)
 
+    @pytest.mark.skip
     def test_bus_route_number_detection(self, __setup_server):
         ip = 'http://127.0.0.1'
         port = '5000'
