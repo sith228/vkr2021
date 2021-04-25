@@ -5,7 +5,7 @@ from threading import Thread
 from server.session_controller import SessionController
 
 
-class Server:
+class TCPServer:
     def __init__(self, address: str, port: int):
         self.socket = socket.socket()
         self.socket.bind((address, port))

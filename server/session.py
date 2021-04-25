@@ -6,7 +6,8 @@ import numpy as np
 
 from common.box import BusBox, TextBox
 from common.event import Publisher
-from common.task import Task, Mode
+from server.task import Task
+from server.network.event import Event
 from pipelines.bus_detection_pipeline import BusDetectionPipeline
 from pipelines.bus_door_detection_pipeline import BusDoorDetectionPipeline
 from pipelines.bus_route_number_recognition_pipeline import BusRouteNumberRecognitionPipeline
@@ -51,11 +52,11 @@ class Session(Publisher):
         while True:
             self.__tasks_semaphore.acquire()
             task = self.__tasks.pop()
-            if task.mode == Mode.BUS_DETECTION:
+            if task.event == Event.BUS_DETECTION:
                 self.__run_bus_detection_pipeline(task.image)
-            elif task.mode == Mode.BUS_ROUTE_NUMBER_RECOGNITION:
+            elif task.event == Event.BUS_ROUTE_NUMBER_RECOGNITION:
                 self.__run_bus_route_number_recognition_pipeline(task.image)
-            elif task.mode == Mode.BUS_DOOR_DETECTION:
+            elif task.event == Event.BUS_DOOR_DETECTION:
                 self.__run_bus_route_number_recognition_pipeline(task.image)
 
     def push_task(self, task: Task):

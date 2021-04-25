@@ -1,7 +1,7 @@
 import socket
 
 from server.session import Session
-from common.task import Task, Mode
+from server.task import Task
 from server.network import Header, Event, Data
 
 
@@ -33,7 +33,7 @@ class SessionController:
 
     def __on_bus_door_detection(self, data):
         image = Data.decode_image(data)
-        self.session.push_task(Task(Mode.BUS_DOOR_DETECTION, image))
+        self.session.push_task(Task(Event.BUS_DOOR_DETECTION, image))
 
     def __session_callback(self, message):
         pass
