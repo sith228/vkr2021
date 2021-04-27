@@ -23,13 +23,14 @@
 | Code | Mode                                | Purpose                         |
 |:----:|:-----------------------------------:|:-------------------------------:|
 | 0    | INIT_SESSION                        | Initialize session              |
-| 1    | BUS_DETECTION                       | Run bus detection               |
-| 2    | BUS_ROUTE_NUMBER_RECOGNITION        | Run route number recognition    |
-| 3    | BUS_DOOR_DETECTION                  | Run bus door detection          |
-| 4    | BUS_DETECTION_RESULT                | Bus detection result            |
-| 5    | BUS_ROUTE_NUMBER_RECOGNITION_RESULT | Route number recognition result |
-| 6    | BUS_DOOR_DETECTION_RESULT           | Bus door detection result       |
-| 255  | CLOSE_SESSION                       | Coles session                   |
+| 63   | CLOSE_SESSION                       | Coles session                   |
+| 64   | BUS_DETECTION                       | Run bus detection               |
+| 65   | BUS_ROUTE_NUMBER_RECOGNITION        | Run route number recognition    |
+| 66   | BUS_DOOR_DETECTION                  | Run bus door detection          |
+| 128  | SESSION_OK                          | Initialize session OK           |
+| 192  | BUS_DETECTION_RESULT                | Bus detection result            |
+| 193  | BUS_ROUTE_NUMBER_RECOGNITION_RESULT | Route number recognition result |
+| 194  | BUS_DOOR_DETECTION_RESULT           | Bus door detection result       |
 
 ## Data structure
 
@@ -44,7 +45,22 @@
 
 #### Image formats
 
-|Code | Format |
-|:---:|:------:|
+|Code | Format  |
+|:---:|:-------:|
+| 0   | RAW_BGR |
 
-### BUS_DETECTION_RESULT, BUS_ROUTE_NUMBER_RECOGNITION_RESULT, BUS_DOOR_DETECTION_RESULT
+### BUS_DETECTION_RESULT, BUS_ROUTE_NUMBER_RECOGNITION_RESULT
+| Segment      | Offset in bytes |
+|:------------:|:---------------:|
+| Control      | 0               |
+| Bus boxes    | 1               |
+
+### Bus box
+| Segment      | Offset in bytes |
+|:------------:|:---------------:|
+| x            | 0               |
+| y            | 4               |
+| height       | 8               |
+| width        | 12              |
+| text length  | 16              |
+| text         | 20              |
