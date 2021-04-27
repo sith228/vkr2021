@@ -1,4 +1,6 @@
 import time
+from typing import List
+from common.box.box import Box
 
 
 class Performance:
@@ -12,5 +14,5 @@ class Performance:
 
 class Accuracy:
     @staticmethod
-    def check(function):
+    def check_boxes(boxes: List[Box]):
         pass
