@@ -2,17 +2,17 @@
 
 ## Contents
 
-* [Header structure](##Header-structure)
+* [Packet structure](##Packet-structure)
 * [Events](##Events)
 * [Data structure](##Data-structure)
   * [BUS_DETECTION, BUS_ROUTE_NUMBER_RECOGNITION, BUS_DOOR_DETECTION](###BUS_DETECTION,-BUS_ROUTE_NUMBER_RECOGNITION,-BUS_DOOR_DETECTION)
     * [Image formats](#Image-formats)
   * [BUS_DETECTION_RESULT, BUS_ROUTE_NUMBER_RECOGNITION_RESULT, BUS_DOOR_DETECTION_RESULT](###BUS_DETECTION_RESULT,-BUS_ROUTE_NUMBER_RECOGNITION_RESULT,-BUS_DOOR_DETECTION_RESULT)
 
-## Header structure
+## Packet structure
 
 | Segment     | Offset in bytes |
-| :----------:| :-------------: |
+|:-----------:|:---------------:|
 | Event       | 0               |
 | Token       | 1               |
 | Data length | 17              |
@@ -21,7 +21,7 @@
 ## Events
 
 | Code | Mode                                | Purpose                         |
-| :--: | :---------------------------------: | :-----------------------------: |
+|:----:|:-----------------------------------:|:-------------------------------:|
 | 0    | INIT_SESSION                        | Initialize session              |
 | 1    | BUS_DETECTION                       | Run bus detection               |
 | 2    | BUS_ROUTE_NUMBER_RECOGNITION        | Run route number recognition    |
@@ -36,7 +36,7 @@
 ### BUS_DETECTION, BUS_ROUTE_NUMBER_RECOGNITION, BUS_DOOR_DETECTION
 
 | Segment      | Offset in bytes |
-| :-----------:| :-------------: |
+|:------------:|:---------------:|
 | Height       | 0               |
 | Width        | 2               |
 | Image format | 4               |
@@ -45,6 +45,6 @@
 #### Image formats
 
 |Code | Format |
-| :-: | :----: |
+|:---:|:------:|
 
 ### BUS_DETECTION_RESULT, BUS_ROUTE_NUMBER_RECOGNITION_RESULT, BUS_DOOR_DETECTION_RESULT
