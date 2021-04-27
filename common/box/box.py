@@ -35,7 +35,7 @@ class Box:
 
     def get_cropped_image(self):
         points = self.get_bound_box_points()
-        return self.__image__[points[0]:points[1], points[2]:points[3]]
+        return self.__image__[points[2]:points[3], points[0]:points[1]]
 
     def get_bound_box(self) -> Tuple[int, int, int, int]:
         """
@@ -67,3 +67,9 @@ class Box:
         # TODO: update inside boxes
         if box.__image__ is not None:
             self.__image__ = box.__image__
+
+    def set_absolute_coordinates_from_parent(self, parent_box: Box):
+        parent_bound_box = parent_box.get_bound_box()
+        self.bound_box_coordinates = (self.bound_box_coordinates[0] + parent_bound_box[0],
+                                      self.bound_box_coordinates[1] + parent_bound_box[1])
+

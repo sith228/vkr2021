@@ -44,6 +44,7 @@ class BusRouteNumberRecognitionPipeline(Pipeline):
 
             # Route number recognition
             for route_number_box in route_number_boxes:
+                route_number_box.set_absolute_coordinates_from_parent(bus_box)
                 self.__text_recognizer.prediction(route_number_box.get_cropped_image())
                 route_number_box.set_text(self.__text_recognizer.get_result())
                 # TODO: Synchronise boxes with session

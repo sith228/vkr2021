@@ -21,7 +21,7 @@ class BusDetection(IBusDetector):
                 label = f'{self.__results__.names[int(cls)]}'
                 if label == "bus":
                     c1, c2 = (int(box[0]), int(box[1])), (int(box[2]), int(box[3]))
-                    result_bus.append(BusBox(c1, c2[0], c2[1], self.__image__))
+                    result_bus.append(BusBox(c1, c2[1], c2[0], self.__image__))
 
         return result_bus
 

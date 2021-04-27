@@ -25,6 +25,8 @@ class SessionController:
             self.__on_init_session(data)
         elif header.event == Event.BUS_DETECTION:
             self.__on_bus_detection(data)
+        elif header.event == Event.BUS_ROUTE_NUMBER_RECOGNITION:
+            self.__on_bus_route_number_recognition(data)
 
     def __answer(self, header: Header, data: bytes = None):
         if data is not None:
@@ -39,6 +41,10 @@ class SessionController:
     def __on_bus_detection(self, data):
         image = Data.decode_image(data)
         self.session.push_task(Task(Event.BUS_DETECTION, image))
+
+    def __on_bus_route_number_recognition(self, data):
+        image = Data.decode_image(data)
+        self.session.push_task(Task(Event.BUS_ROUTE_NUMBER_RECOGNITION, image))
 
     # Session message handlers =========================================================================================
     def __on_send_bus_box(self, message: BusBoxMessage):
