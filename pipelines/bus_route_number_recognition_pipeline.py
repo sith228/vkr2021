@@ -1,8 +1,9 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 import cv2
 import numpy as np
 
+from common.box import BusBox
 from pipelines.pipeline import Pipeline
 from tools.models.object_detector import ObjectDetectorFactory
 from tools.models.text_detector import TextDetectorFactory
@@ -22,7 +23,7 @@ class BusRouteNumberRecognitionPipeline(Pipeline):
     def __is_bus_route_number_recognized(self) -> bool:
         pass
 
-    def start_processing(self, image: np.ndarray) -> Dict[str, Any]:
+    def start_processing(self, image: np.ndarray) -> Dict[str, List[BusBox]]:
         """
         Detects and recognizes bus route number
         :param image:
