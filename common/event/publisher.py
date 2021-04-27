@@ -12,7 +12,7 @@ class Publisher:
         """
         self.__callbacks.append(callback)
 
-    def __broadcast(self, message: Message):
+    def broadcast(self, message: Message):
         """
         Runs listeners callbacks
         :param message:

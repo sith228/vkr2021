@@ -13,7 +13,7 @@ class Interruptible:
         """
         self.__handlers.update({name: handler})
 
-    def __interrupt(self, name: str, data: Any):
+    def interrupt(self, name: str, data: Any):
         """
         Interrupts with named handler
         :param name: Name of handler

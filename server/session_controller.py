@@ -14,7 +14,6 @@ class SessionController:
         self.connection = connection
         self.session = Session()
         self.session.add_callback(self.__session_callback)
-        self.session.run()
 
     def __listen(self):
         header = Header(self.connection.recvfrom(Header.length)[0])
@@ -24,8 +23,8 @@ class SessionController:
 
         if header.event == Event.INIT_SESSION:
             self.__on_init_session(data)
-        elif header.event == Event.BUS_DOOR_DETECTION:
-            self.__on_bus_door_detection(data)
+        elif header.event == Event.BUS_DETECTION:
+            self.__on_bus_detection(data)
 
     def __answer(self, header: Header, data: bytes = None):
         if data is not None:
@@ -37,9 +36,9 @@ class SessionController:
     def __on_init_session(self, data):
         pass
 
-    def __on_bus_door_detection(self, data):
+    def __on_bus_detection(self, data):
         image = Data.decode_image(data)
-        self.session.push_task(Task(Event.BUS_DOOR_DETECTION, image))
+        self.session.push_task(Task(Event.BUS_DETECTION, image))
 
     # Session message handlers =========================================================================================
     def __on_send_bus_box(self, message: BusBoxMessage):
@@ -52,5 +51,8 @@ class SessionController:
             self.__on_send_bus_box(message)
 
     def run(self):
-        while True:
-            self.__listen()
+        try:
+            while True:
+                self.__listen()
+        except ConnectionResetError:
+            return
