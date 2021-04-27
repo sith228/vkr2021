@@ -7,11 +7,11 @@ import numpy as np
 
 
 class Box:
-    def __init__(self, bound_box_coordinates: Tuple[int, int], width: int, height: int, image: np.ndarray):
+    def __init__(self, bound_box_coordinates: Tuple[int, int], height: int, width: int, image: np.ndarray):
         """
         :param bound_box_coordinates: Bound box
-        :param width: Width
         :param height: Height
+        :param width: Width
         :param image: OpenCV image
         """
         self.bound_box_coordinates: Tuple[int, int] = bound_box_coordinates
@@ -39,9 +39,9 @@ class Box:
 
     def get_bound_box(self) -> Tuple[int, int, int, int]:
         """
-        :return: (x, y, width, height)
+        :return: (x, y, height, width)
         """
-        return self.bound_box_coordinates[0], self.bound_box_coordinates[1], self.width, self.height
+        return self.bound_box_coordinates[0], self.bound_box_coordinates[1], self.height, self.width
 
     def insert_boxes(self, boxes_list: List[Box]):
         for box in boxes_list:

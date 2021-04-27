@@ -6,6 +6,7 @@ import numpy as np
 
 from common.box import BusBox, TextBox
 from common.event import Publisher
+from server.message.bus_box_message import BusBoxMessage
 from server.task import Task
 from server.network.event import Event
 from pipelines.bus_detection_pipeline import BusDetectionPipeline
@@ -40,13 +41,15 @@ class Session(Publisher):
 
     # Tasks ============================================================================================================
     def __run_bus_detection_pipeline(self, image: np.ndarray):
-        self.__bus_detection_pipeline.start_processing(image)
+        result = self.__bus_detection_pipeline.start_processing(image)
+        self.__broadcast(BusBoxMessage(Event.BUS_DETECTION, result['boxes']))
 
     def __run_bus_door_detection_pipeline(self, image: np.ndarray):
         self.__bus_door_detection_pipeline.start_processing(image)
 
     def __run_bus_route_number_recognition_pipeline(self, image: np.ndarray):
-        self.__bus_route_number_recognition_pipeline.start_processing(image)
+        result = self.__bus_route_number_recognition_pipeline.start_processing(image)
+        self.__broadcast(BusBoxMessage(Event.BUS_DETECTION, result['boxes']))
 
     def run(self):
         while True:

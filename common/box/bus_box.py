@@ -4,5 +4,5 @@ import numpy as np
 
 
 class BusBox(Box):
-    def __init__(self, bound_box_coordinates: Tuple[int, int], width: int, height: int, image: np.ndarray):
-        super().__init__(bound_box_coordinates, width, height, image)
+    def __init__(self, bound_box_coordinates: Tuple[int, int], height: int, width: int, image: np.ndarray):
+        super().__init__(bound_box_coordinates, height, width, image)
