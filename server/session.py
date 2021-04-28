@@ -6,6 +6,7 @@ import numpy as np
 
 from common.box import BusBox, TextBox
 from common.event import Publisher
+from common.utils.box_validator_utils import BoxValidator
 from server.message.bus_box_message import BusBoxMessage
 from server.task import Task
 from server.network.event import Event
@@ -77,4 +78,8 @@ class Session(Publisher):
         pass
 
     def __interruption_update_bus_route_number(self, bus_boxes: List[BusBox]):
-        pass
+        for bus_box in bus_boxes:
+            for text_box in bus_box.get_subboxes():
+                if BoxValidator.has_valid_text(text_box):
+                    bus_box.route_number = text_box.get_text()
+                    break

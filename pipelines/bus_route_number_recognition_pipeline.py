@@ -1,10 +1,10 @@
-from typing import Dict, Any, List
+from typing import Dict, List
 
-import cv2
 import numpy as np
 
 from common.box import BusBox
 from pipelines.pipeline import Pipeline
+from server.message.bus_box_message import BusBoxMessage
 from tools.models.object_detector import ObjectDetectorFactory
 from tools.models.text_detector import TextDetectorFactory
 from tools.models.text_recognizer import TextRecognizerFactory
@@ -48,8 +48,7 @@ class BusRouteNumberRecognitionPipeline(Pipeline):
                 self.__text_recognizer.prediction(route_number_box.get_cropped_image())
                 route_number_box.set_text(self.__text_recognizer.get_result())
                 # TODO: Synchronise boxes with session
-
+        self.interrupt('update_bus_route_number', bus_boxes)
         return {
             'boxes': bus_boxes,
-            'route_number': []  # TODO: Get route number from bus box
         }

@@ -31,9 +31,14 @@ class Data:
         result += int(0).to_bytes(1, 'little')  # TODO: Add control
         for bus_box in bus_boxes:
             bound_box = bus_box.get_bound_box()
-            result += bound_box[0].to_bytes(4, 'little')
-            result += bound_box[1].to_bytes(4, 'little')
-            result += bound_box[2].to_bytes(4, 'little')
-            result += bound_box[3].to_bytes(4, 'little')
-            result += int(0).to_bytes(4, 'little')  # TODO: Add text
+            result += bound_box[0].to_bytes(4, 'little')  # x
+            result += bound_box[1].to_bytes(4, 'little')  # y
+            result += bound_box[2].to_bytes(4, 'little')  # Height
+            result += bound_box[3].to_bytes(4, 'little')  # Width
+            if bus_box.route_number is not None:
+                result += len(bus_box.route_number).to_bytes(4, 'little')  # Text length
+                result += bus_box.route_number.encode()  # Text
+            else:
+                result += int(0).to_bytes(4, 'little')  # Text length
+
         return result
