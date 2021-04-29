@@ -1,12 +1,16 @@
 from tools.models.object_detectors.yolo.bus_detection import BusDetection
+from tests.checkers.test_checker import Accuracy
 import cv2
 import pytest
 
 
 class TestBusDetection:
-    @pytest.mark.skip
     def test_bus_detection(self):
         bus_detector = BusDetection()
-        image = cv2.imread('./test_data/text_sample.png')
-        bus_detector.prediction(image)
-        assert len(bus_detector.result()) != 0
+        images = Accuracy.get_test_image()
+        list_for_check = []
+        for test_image in images:
+            image = cv2.imread(test_image[0])
+            bus_detector.prediction(image)
+            list_for_check.append((test_image[0], bus_detector.get_boxes()[0]))
+        Accuracy.check_boxes(list_for_check)
