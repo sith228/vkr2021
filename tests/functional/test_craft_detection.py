@@ -1,4 +1,5 @@
 import cv2
+import pytest
 
 from tools.models.text_detectors.craft.text_craft_detector import CraftDetection
 

@@ -7,7 +7,7 @@ import cv2
 from flask import Flask, request, Response
 
 from pipelines.bus_detection_pipeline import BusDetectionPipeline
-from common.session import Session
+from server.session import Session
 from pipelines.bus_route_number_recognition_pipeline import BusRouteNumberRecognitionPipeline
 
 

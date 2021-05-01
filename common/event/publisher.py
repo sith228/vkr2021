@@ -1,3 +1,6 @@
+from . import Message
+
+
 class Publisher:
     def __init__(self):
         self.__callbacks = []
@@ -9,7 +12,7 @@ class Publisher:
         """
         self.__callbacks.append(callback)
 
-    def broadcast(self, message):
+    def broadcast(self, message: Message):
         """
         Runs listeners callbacks
         :param message:

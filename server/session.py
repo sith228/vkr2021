@@ -6,7 +6,10 @@ import numpy as np
 
 from common.box import BusBox, TextBox
 from common.event import Publisher
-from common.task import Task, Mode
+from common.utils.box_validator_utils import BoxValidator
+from server.message.bus_box_message import BusBoxMessage
+from server.task import Task
+from server.network.event import Event
 from pipelines.bus_detection_pipeline import BusDetectionPipeline
 from pipelines.bus_door_detection_pipeline import BusDoorDetectionPipeline
 from pipelines.bus_route_number_recognition_pipeline import BusRouteNumberRecognitionPipeline
@@ -37,32 +40,34 @@ class Session(Publisher):
 
         self.__thread.start()
 
-    # Tasks
+    # Tasks ============================================================================================================
     def __run_bus_detection_pipeline(self, image: np.ndarray):
-        self.__bus_detection_pipeline.start_processing(image)
+        result = self.__bus_detection_pipeline.start_processing(image)
+        self.broadcast(BusBoxMessage(Event.BUS_DETECTION, result['boxes']))
 
     def __run_bus_door_detection_pipeline(self, image: np.ndarray):
         self.__bus_door_detection_pipeline.start_processing(image)
 
     def __run_bus_route_number_recognition_pipeline(self, image: np.ndarray):
-        self.__bus_route_number_recognition_pipeline.start_processing(image)
+        result = self.__bus_route_number_recognition_pipeline.start_processing(image)
+        self.broadcast(BusBoxMessage(Event.BUS_DETECTION, result['boxes']))
 
     def run(self):
         while True:
             self.__tasks_semaphore.acquire()
             task = self.__tasks.pop()
-            if task.mode == Mode.BUS_DETECTION:
+            if task.event == Event.BUS_DETECTION:
                 self.__run_bus_detection_pipeline(task.image)
-            elif task.mode == Mode.BUS_ROUTE_NUMBER_RECOGNITION:
+            elif task.event == Event.BUS_ROUTE_NUMBER_RECOGNITION:
                 self.__run_bus_route_number_recognition_pipeline(task.image)
-            elif task.mode == Mode.BUS_DOOR_DETECTION:
+            elif task.event == Event.BUS_DOOR_DETECTION:
                 self.__run_bus_route_number_recognition_pipeline(task.image)
 
     def push_task(self, task: Task):
         self.__tasks.append(task)
         self.__tasks_semaphore.release()
 
-    # Interruptions
+    # Interruptions ====================================================================================================
     def __interruption_update_bus_boxes(self, bus_boxes: List[BusBox]):
         pass
 
@@ -73,4 +78,8 @@ class Session(Publisher):
         pass
 
     def __interruption_update_bus_route_number(self, bus_boxes: List[BusBox]):
-        pass
+        for bus_box in bus_boxes:
+            for text_box in bus_box.get_subboxes():
+                if BoxValidator.has_valid_text(text_box):
+                    bus_box.route_number = text_box.get_text()
+                    break
