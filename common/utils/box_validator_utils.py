@@ -21,5 +21,5 @@ class BoxValidator:
 
     @staticmethod
     def has_valid_text(text_box: TextBox):  # TODO: Only for Nizniy Novgorod
-        return re.match('\\S\\d+', text_box.get_text())
+        return re.match('\\d*', text_box.get_text())
 
