@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 from common.box import BusBox
 from pipelines.pipeline import Pipeline
@@ -19,7 +19,7 @@ class BusDetectionPipeline(Pipeline):
     def __is_bus_moves_right(self) -> dict:
         pass
 
-    def start_processing(self, image: np.ndarray) -> Dict[str, BusBox]:
+    def start_processing(self, image: np.ndarray) -> Dict[str, List[BusBox]]:
         """
         Detects buses
         :param image:

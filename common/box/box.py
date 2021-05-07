@@ -7,11 +7,11 @@ import numpy as np
 
 
 class Box:
-    def __init__(self, bound_box_coordinates: Tuple[int, int], width: int, height: int, image: np.ndarray):
+    def __init__(self, bound_box_coordinates: Tuple[int, int], height: int, width: int, image: np.ndarray):
         """
         :param bound_box_coordinates: Bound box
-        :param width: Width
         :param height: Height
+        :param width: Width
         :param image: OpenCV image
         """
         self.bound_box_coordinates: Tuple[int, int] = bound_box_coordinates
@@ -35,13 +35,13 @@ class Box:
 
     def get_cropped_image(self):
         points = self.get_bound_box_points()
-        return self.__image__[points[0]:points[1], points[2]:points[3]]
+        return self.__image__[points[2]:points[3], points[0]:points[1]]
 
     def get_bound_box(self) -> Tuple[int, int, int, int]:
         """
-        :return: (x, y, width, height)
+        :return: (x, y, height, width)
         """
-        return self.bound_box_coordinates[0], self.bound_box_coordinates[1], self.width, self.height
+        return self.bound_box_coordinates[0], self.bound_box_coordinates[1], self.height, self.width
 
     def insert_boxes(self, boxes_list: List[Box]):
         for box in boxes_list:
@@ -98,3 +98,9 @@ class Box:
             if box_b[2] <= box_a[3] <= box_b[3] or box_a[2] <= box_b[3] <= box_a[3]:
                 return True
         return False
+
+    def set_absolute_coordinates_from_parent(self, parent_box: Box):
+        parent_bound_box = parent_box.get_bound_box()
+        self.bound_box_coordinates = (self.bound_box_coordinates[0] + parent_bound_box[0],
+                                      self.bound_box_coordinates[1] + parent_bound_box[1])
+

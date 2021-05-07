@@ -1,11 +1,10 @@
-import cv2
-import os
-import pytest
-from types import SimpleNamespace
-from urllib.request import Request, urlopen
+import socket
 
-from common.server import Server
-from tests.metrics import Metrics
+import cv2
+import pytest
+
+from server.network import Header, Event, Data
+from server.network.image_format import ImageFormat
 
 
 class TestServer:
@@ -16,31 +15,22 @@ class TestServer:
 
         yield
 
-    @staticmethod
-    def __provide_request(image, url):
-        data = cv2.imencode('.jpg', image)[1].tobytes()
-        headers = {'content-type': 'image/jpeg'}
-        request = Request(url, data=data, headers=headers)
-        answer = urlopen(request).read()
-        # TODO: Add answer decode
-        return answer
+    def test_session_bus_detection(self):
+        image = cv2.imread('test_data/mobilenet_data_v1/2019-10-06 13-12-21.jpg')
+        data = Data.encode_image(image, ImageFormat.RAW_BGR)
+        header = Header(event=Event.BUS_DETECTION, token=0, data_length=len(data)).to_bytes()
+        client_socket = socket.socket()
+        client_socket.connect(('localhost', 5000))  # TODO: port from constant
+        client_socket.send(header + data)
+        # Wait for answer
+        header = Header(client_socket.recvfrom(Header.length)[0])
 
-    def test_bus_detection(self, __setup_server):
-        ip = 'http://127.0.0.1'
-        port = '5000'
-        bus_images_directory = './test_data/coco_bus/train/'
-
-        images = os.listdir(bus_images_directory)
-        image = cv2.imread(bus_images_directory + images[0])
-        answer = self.__provide_request(image, ip + ':' + port + '/bus_detection')
-        Metrics.write('test_metric', 9)
-
-    def test_bus_route_number_detection(self, __setup_server):
-        ip = 'http://127.0.0.1'
-        port = '5000'
-        bus_images_directory = './test_data/coco_bus/train/'
-
-        images = os.listdir(bus_images_directory)
-        image = cv2.imread(bus_images_directory + images[0])
-        answer = self.__provide_request(image, ip + ":" + port + '/bus_detection')
-        Metrics.write('test_metric2', 11)
+    def test_session_bus_route_number_recognition(self):
+        image = cv2.imread('test_data/mobilenet_data_v1/2019-10-06 13-12-21.jpg')
+        data = Data.encode_image(image, ImageFormat.RAW_BGR)
+        header = Header(event=Event.BUS_ROUTE_NUMBER_RECOGNITION, token=0, data_length=len(data)).to_bytes()
+        client_socket = socket.socket()
+        client_socket.connect(('localhost', 5000))  # TODO: port from constant
+        client_socket.send(header + data)
+        # Wait for answer
+        header = Header(client_socket.recvfrom(Header.length)[0])

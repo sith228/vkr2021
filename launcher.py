@@ -2,13 +2,13 @@ import argparse
 import logging
 
 from common.logger import init_logger
-from common.server import Server
+from server.tcpserver import TCPServer
 
 
 class Launcher(object):
     def __init__(self):
         args = self.__get_argument_parser().parse_args()
-        self.server = Server(args)
+        self.server = TCPServer('', args.port)
         logger.info("Server initialized")
 
     @staticmethod

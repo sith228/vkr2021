@@ -34,6 +34,7 @@ class CraftDetection(ITextDetector):
     def get_boxes(self) -> List[Box]:
         result_text_box = []
         for box in self.__results__['boxes']:
-            result_text_box.append(TextBox((box[0][0], box[0][1]), box[2][0] - box[0][0], box[2][1] - box[0][1], self.__image__))
+            result_text_box.append(TextBox((int(box[0][0]), int(box[0][1])), int(box[2][1] - box[0][1]),
+                                           int(box[2][0] - box[0][0]), self.__image__))
 
         return result_text_box
