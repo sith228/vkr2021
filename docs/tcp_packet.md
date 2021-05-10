@@ -48,6 +48,7 @@
 |Code | Format  |
 |:---:|:-------:|
 | 0   | RAW_BGR |
+| 1   | JPG_RGB |
 
 ### BUS_DETECTION_RESULT, BUS_ROUTE_NUMBER_RECOGNITION_RESULT
 | Segment      | Offset in bytes |
@@ -60,7 +61,7 @@
 |:------------:|:---------------:|
 | x            | 0               |
 | y            | 4               |
-| height       | 8               |
-| width        | 12              |
-| text length  | 16              |
-| text         | 20              |
+| Height       | 8               |
+| Width        | 12              |
+| Text length  | 16              |
+| Text         | 20              |
