@@ -6,6 +6,7 @@ from typing import Tuple, List
 from common.box.text_box import Box, TextBox
 
 
+
 class Performance:
     @staticmethod
     def check(function) -> float:
@@ -101,5 +102,3 @@ class Accuracy:
             return do_match, float(1 / all_images), accuracy_recognition
         else:
             return do_match, 0, 0.0
-
-
