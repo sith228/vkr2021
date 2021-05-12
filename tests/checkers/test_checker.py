@@ -17,6 +17,7 @@ class Performance:
 
 
 class Accuracy:
+    # TODO: Need to make a general solution for dump names
     @staticmethod
     def get_test_image(file: str):
         data = []
@@ -44,6 +45,24 @@ class Accuracy:
             for i, cord in enumerate(shape):
                 shape[i] = int(cord)
             results_data.append((text, shape, result_value))
+        return results_data
+
+    # TODO: Need to make a general solution for dump names
+    @staticmethod
+    def get_test_image_text(file: str):
+        data = []
+        results_data = []
+        with open(file, 'r') as f:
+            for line in f:
+                data.append(line)
+
+        for file_box in data:
+            result = file_box.split(' ')
+            if result[1][-1] == '\n':
+                result[1] = result[1][:-1]
+            text = result[0]
+
+            results_data.append((text, result[1]))
         return results_data
 
     @staticmethod
