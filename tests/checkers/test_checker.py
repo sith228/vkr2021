@@ -1,15 +1,18 @@
 import time
 import cv2
 import re
-import numpy as np
 from typing import Tuple, List
 from common.box.text_box import Box, TextBox
-
 
 
 class Performance:
     @staticmethod
     def check(function) -> float:
+        """
+        Returns speed for function
+        :param function:
+        :return: milliseconds
+        """
         start = time.time()
         function()
         end = time.time() - start
@@ -20,6 +23,11 @@ class Accuracy:
     # TODO: Need to make a general solution for dump names
     @staticmethod
     def get_test_image(file: str):
+        """
+        Returns list of names for testing
+        :param file:
+        :return: ist of names
+        """
         data = []
         results_data = []
         with open(file, 'r') as f:
@@ -50,6 +58,11 @@ class Accuracy:
     # TODO: Need to make a general solution for dump names
     @staticmethod
     def get_test_image_text(file: str):
+        """
+        Returns list of names for testing
+        :param file:
+        :return: ist of names
+        """
         data = []
         results_data = []
         with open(file, 'r') as f:
@@ -65,8 +78,14 @@ class Accuracy:
             results_data.append((text, result[1]))
         return results_data
 
+    # TODO: Need add logging data
     @staticmethod
     def check_boxes(boxes: List[Tuple[str, Box]]):
+        """
+        Checks that boxes intersect with tests boxes more than 50%
+        :param boxes: Boxes which had been detected
+        :return: none
+        """
         results_data = Accuracy.get_test_image('./tests/checkers/data.txt')
 
         for box_candidate in boxes:
@@ -79,6 +98,12 @@ class Accuracy:
 
     @staticmethod
     def check_text_recognition(text_rec: str, text_check: str) -> float:
+        """
+        Checks correct recognition text
+        :param text_rec: Text which had been recognized
+        :param text_check: Texts in test file
+        :return: Percent of correct
+        """
         if len(text_rec) == len(text_check):
             match = re.search(text_check, text_rec)
             if match:
