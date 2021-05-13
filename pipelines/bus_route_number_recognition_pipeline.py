@@ -17,16 +17,10 @@ class BusRouteNumberRecognitionPipeline(Pipeline):
         self.__text_recognizer = TextRecognizerFactory.get('moran')
         self.__text_detector = TextDetectorFactory.get('craft')
 
-    def __is_bus_route_number_detected(self) -> bool:
-        pass
-
-    def __is_bus_route_number_recognized(self) -> bool:
-        pass
-
     def start_processing(self, image: np.ndarray) -> Dict[str, List[BusBox]]:
         """
         Detects and recognizes bus route number
-        :param image:
+        :param image: image
         :return: Dictionary with bus
         """
 
@@ -46,7 +40,7 @@ class BusRouteNumberRecognitionPipeline(Pipeline):
             for route_number_box in route_number_boxes:
                 route_number_box.set_absolute_coordinates_from_parent(bus_box)
                 self.__text_recognizer.prediction(route_number_box.get_cropped_image())
-                route_number_box.set_text(self.__text_recognizer.get_result())
+                route_number_box.text = self.__text_recognizer.get_result()
                 # TODO: Synchronise boxes with session
         self.interrupt('update_bus_route_number', bus_boxes)
         return {

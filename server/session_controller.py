@@ -1,7 +1,5 @@
 import socket
-from typing import List
 
-from common.box import BusBox
 from server.message.bus_box_message import BusBoxMessage
 from server.message.session_message import SessionMessage
 from server.session import Session
@@ -57,6 +55,10 @@ class SessionController:
             self.__on_send_bus_box(message)
 
     def run(self):
+        """
+        Starts client listening loop
+        :return: none
+        """
         try:
             while True:
                 self.__listen()

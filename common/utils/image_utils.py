@@ -15,7 +15,7 @@ def resize_to_show(image: np.ndarray, width: int = 300) -> np.ndarray:
     return cv2.resize(image, (width, height))
 
 
-def show_image(image: np.ndarray, name: str = "Debug", pause: int = 1, width: int = 300):
+def show_image(image: np.ndarray, name: str = 'Debug', pause: int = 1, width: int = 300):
     """
     Shows image at screen
     :param image: Input image

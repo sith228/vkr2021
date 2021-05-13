@@ -13,16 +13,10 @@ class BusDetectionPipeline(Pipeline):
         self.bus_detector = ObjectDetectorFactory.get('yolo')
         # self.bus_moves_right_detector  # TODO: Add bus moves right detector
 
-    def __is_bus_detected(self) -> dict:
-        pass
-
-    def __is_bus_moves_right(self) -> dict:
-        pass
-
     def start_processing(self, image: np.ndarray) -> Dict[str, List[BusBox]]:
         """
         Detects buses
-        :param image:
+        :param image: image
         :return:  Dictionary with list of bus boxes inside
         """
         self.bus_detector.prediction(image)

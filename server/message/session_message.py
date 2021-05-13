@@ -4,4 +4,7 @@ from server.network.event import Event
 
 class SessionMessage(Message):
     def __init__(self, event: Event):
-        self.event = event
+        """
+        :param event: Message event
+        """
+        self.event: Event = event

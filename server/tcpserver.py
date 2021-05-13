@@ -11,6 +11,10 @@ class TCPServer:
         self.socket.bind((address, port))
 
     def run(self):
+        """
+        Starts TCP server
+        :return: none
+        """
         self.socket.listen()
         while True:
             connection, address = self.socket.accept()

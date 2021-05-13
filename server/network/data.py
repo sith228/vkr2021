@@ -9,6 +9,11 @@ from server.network.image_format import ImageFormat
 class Data:
     @staticmethod
     def decode_image(data: bytes) -> np.ndarray:
+        """
+        Decodes image from packet data
+        :param data: packet data
+        :return: Image
+        """
         height = int.from_bytes(data[0:2], 'little')
         width = int.from_bytes(data[2:4], 'little')
         image_format = ImageFormat(int.from_bytes(data[4:5], 'little', signed=False))
@@ -16,7 +21,13 @@ class Data:
             return np.frombuffer(data[5:], np.uint8).reshape((height, width, 3))
 
     @staticmethod
-    def encode_image(image: np.ndarray, image_format: ImageFormat):
+    def encode_image(image: np.ndarray, image_format: ImageFormat) -> bytes:
+        """
+        Returns packet data from image
+        :param image: image
+        :param image_format: image format
+        :return: packet data
+        """
         result = b''
         result += (image.shape[0]).to_bytes(2, 'little')
         result += image.shape[1].to_bytes(2, 'little')
@@ -27,6 +38,11 @@ class Data:
 
     @staticmethod
     def encode_bus_boxes(bus_boxes: List[BusBox]):
+        """
+        Encode packet data from bus boxes
+        :param bus_boxes: List of bus boxes
+        :return: Packet data
+        """
         result = b''
         result += int(0).to_bytes(1, 'little')  # TODO: Add control
         for bus_box in bus_boxes:
