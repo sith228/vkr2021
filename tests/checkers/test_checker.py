@@ -75,7 +75,7 @@ class Accuracy:
                     image = cv2.imread(next_data[0])
                     result_box = Box((next_data[1][0], next_data[1][1]), next_data[1][2], next_data[1][3], image)
                     assert Box.check_intersection(result_box, box_candidate[1])
-                    assert Box.compare_boxes(result_box, box_candidate[1]) > 0.5
+                    assert Box.compare_boxes_area(result_box, box_candidate[1]) > 0.5
 
     @staticmethod
     def check_text_recognition(text_rec: str, text_check: str) -> float:
@@ -113,9 +113,9 @@ class Accuracy:
                 for test_box in text_box[1]:
                     all_images = all_images + 1
                     if Box.check_intersection(test_box, result_box):
-                        if Box.compare_boxes(test_box, result_box):
-                            if Accuracy.check_text_recognition(test_box.get_text(), next_data[2]) > 0.75:
-                                accuracy_recognition = Accuracy.check_text_recognition(test_box.get_text(), next_data[2])
+                        if Box.compare_boxes_area(test_box, result_box):
+                            if Accuracy.check_text_recognition(test_box.text, next_data[2]) > 0.75:
+                                accuracy_recognition = Accuracy.check_text_recognition(test_box.text, next_data[2])
                                 do_match = True
         if do_match:
             return do_match, float(1 / all_images), accuracy_recognition

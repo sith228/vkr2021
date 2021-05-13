@@ -7,6 +7,7 @@ class BoxValidator:
     def __init__(self):
         self.max_aspect_ratio = 2
 
+    # TODO: update for new box
     def size_validation(self, box) -> bool:
         """
         Check if aspect ratio is acceptable
@@ -20,6 +21,11 @@ class BoxValidator:
         return True
 
     @staticmethod
-    def has_valid_text(text_box: TextBox):  # TODO: Only for Nizniy Novgorod
-        return re.match(r'(^[a-zA-Zа-яА-Я]\d\d*$)|(^\d\d*$)', text_box.get_text())
+    def has_valid_text(text_box: TextBox):
+        """
+        Match text from text box with usual number naming
+        :param text_box: input text box
+        :return: True if matched
+        """
+        return re.match(r'(^[a-zA-Zа-яА-Я]\d\d*$)|(^\d\d*$)', text_box.text)
 

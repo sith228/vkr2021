@@ -9,6 +9,7 @@ class Publisher:
         """
         Subscribe to publisher events, ask him to run callback
         :param callback: callback function
+        :return none
         """
         self.__callbacks.append(callback)
 
@@ -16,6 +17,7 @@ class Publisher:
         """
         Runs listeners callbacks
         :param message:
+        :return none
         """
         for callback in self.__callbacks:
             callback(message)  # TODO: Run callback at new thread

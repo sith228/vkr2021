@@ -7,6 +7,7 @@ class DetectorUtils(object):
     @staticmethod
     def min_area_rect(contour: np.ndarray) -> Tuple[Any, int, int, int]:
         """
+        Returns minAreaRect of contour
         :param contour: Contour
         :return: Outline angled rectangle
         """
