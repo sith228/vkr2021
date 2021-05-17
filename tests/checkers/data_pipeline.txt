@@ -1,0 +1,2 @@
+./test_data/pipeline_test_data/frame_000118.PNG 31 565 30 49 41
+./test_data/pipeline_test_data/frame_000201.PNG 46 183 55 39 36
