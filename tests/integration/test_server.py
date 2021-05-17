@@ -17,7 +17,7 @@ class TestServer:
 
     def test_session_bus_detection(self):
         image = cv2.imread('test_data/mobilenet_data_v1/2019-10-06 13-12-21.jpg')
-        data = Data.encode_image(image, ImageFormat.RAW_BGR)
+        data = Data.encode_image(image, ImageFormat.JPG_RGB)
         header = Header(event=Event.BUS_DETECTION, token=0, data_length=len(data)).to_bytes()
         client_socket = socket.socket()
         client_socket.connect(('localhost', 5000))  # TODO: port from constant
@@ -27,7 +27,7 @@ class TestServer:
 
     def test_session_bus_route_number_recognition(self):
         image = cv2.imread('test_data/mobilenet_data_v1/2019-10-06 13-12-21.jpg')
-        data = Data.encode_image(image, ImageFormat.RAW_BGR)
+        data = Data.encode_image(image, ImageFormat.JPG_RGB)
         header = Header(event=Event.BUS_ROUTE_NUMBER_RECOGNITION, token=0, data_length=len(data)).to_bytes()
         client_socket = socket.socket()
         client_socket.connect(('localhost', 5000))  # TODO: port from constant

@@ -1,5 +1,6 @@
 from typing import List
 
+import cv2
 import numpy as np
 
 from common.box import BusBox
@@ -19,6 +20,8 @@ class Data:
         image_format = ImageFormat(int.from_bytes(data[4:5], 'little', signed=False))
         if image_format == ImageFormat.RAW_BGR:
             return np.frombuffer(data[5:], np.uint8).reshape((height, width, 3))
+        elif image_format == ImageFormat.JPG_RGB:
+            return cv2.imdecode(np.frombuffer(data[5:], np.uint8), cv2.IMREAD_COLOR)
 
     @staticmethod
     def encode_image(image: np.ndarray, image_format: ImageFormat) -> bytes:
@@ -34,6 +37,8 @@ class Data:
         result += image_format.value.to_bytes(1, 'little', signed=False)
         if image_format == ImageFormat.RAW_BGR:
             result += image.tobytes()
+        elif image_format == ImageFormat.JPG_RGB:
+            result += cv2.imencode('.jpg', image)[1].tobytes()
         return result
 
     @staticmethod

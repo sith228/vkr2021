@@ -1,4 +1,5 @@
 import socket
+from typing import Final
 
 from server.message.bus_box_message import BusBoxMessage
 from server.message.session_message import SessionMessage
@@ -8,6 +9,8 @@ from server.network import Header, Event, Data
 
 
 class SessionController:
+    DEFAULT_DATA_PACKET_LENGTH: Final = 512
+
     def __init__(self, connection: socket):
         self.connection = connection
         self.session = Session()
@@ -16,8 +19,12 @@ class SessionController:
     def __listen(self):
         header = Header(self.connection.recvfrom(Header.length)[0])
         data = b''
-        while len(data) < header.data_length:
-            data += self.connection.recvfrom(512)[0]  # TODO: Setup packet size from constant
+        remaining_length = header.data_length
+        while remaining_length > 0:
+            data += self.connection.recvfrom(self.DEFAULT_DATA_PACKET_LENGTH
+                                             if remaining_length > self.DEFAULT_DATA_PACKET_LENGTH
+                                             else remaining_length)[0]
+            remaining_length = header.data_length - len(data)
 
         if header.event == Event.INIT_SESSION:
             self.__on_init_session(data)
