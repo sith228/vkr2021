@@ -8,7 +8,7 @@ def init_logger():
         'disable_existing_loggers': True,
         'formatters': {
             'default': {
-                'format': '[%(asctime)s:%(msecs)03d] %(levelname)-5s %(message)s',
+                'format': '[%(asctime)s:%(msecs)03d] %(name)s %(levelname)-5s %(message)s',
                 'datefmt': '%d.%m %H:%M:%S',
             }, 'net': {
                 'format': '%(asctime)s %(message)s',
@@ -22,9 +22,17 @@ def init_logger():
                 'formatter': 'default'
             },
             'summary': {
-                'level': 'DEBUG',
+                'level': 'INFO',
                 'class': 'logging.FileHandler',
                 'filename': "test_summary.log",
+                'encoding': 'utf-8',
+                'mode': 'w',
+                'formatter': 'default'
+            },
+            'test_log': {
+                'level': 'INFO',
+                'class': 'logging.FileHandler',
+                'filename': 'test_results.log',
                 'encoding': 'utf-8',
                 'mode': 'w',
                 'formatter': 'default'
@@ -35,12 +43,16 @@ def init_logger():
                 'handlers': ['summary', 'console'],
                 'level': 'DEBUG',
                 'propagate': True
-            }
+            },
+            'tests': {
+                'level': 'DEBUG',
+                'handlers': ['test_log']
+            },
+            'root': {
+                'level': 'DEBUG',
+                'handlers': ['console', 'summary']
+            },
         },
-        'root': {
-            'level': 'DEBUG',
-            'handlers': ['console', 'summary']
-        }
     }
 
     logging.config.dictConfig(logger_config)
