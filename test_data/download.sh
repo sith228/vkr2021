@@ -9,5 +9,5 @@ wget "34.67.40.164:8080/download/pipeline_test_data.zip" # Image for test pipeli
 # Extract
 unzip -q test_data.zip -d "$BASEDIR"
 unzip -q test_number.zip -d "$BASEDIR"
-unzip -q pipeline_test_data.zip "$BASEDIR"
+unzip -q pipeline_test_data.zip -d "$BASEDIR"
 unzip -q coco_bus.zip -d "$BASEDIR/coco_bus"
