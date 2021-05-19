@@ -10,6 +10,7 @@ class Interruptible:
         Add interruption handler
         :param name Name of handler
         :param handler: Interruption handler
+        :return none
         """
         self.__handlers.update({name: handler})
 
@@ -18,5 +19,6 @@ class Interruptible:
         Interrupts with named handler
         :param name: Name of handler
         :param data: Data that will be sent to handler
+        :return none
         """
         self.__handlers[name](data)

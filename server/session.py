@@ -1,6 +1,6 @@
 from collections import deque
 from threading import Semaphore, Thread
-from typing import List
+from typing import List, Final
 
 import numpy as np
 
@@ -16,6 +16,8 @@ from pipelines.bus_route_number_recognition_pipeline import BusRouteNumberRecogn
 
 
 class Session(Publisher):
+    TASKS_DEQUE_MAXIMUM_LENGTH: Final = 8
+
     def __init__(self):
         super().__init__()
 
@@ -34,7 +36,7 @@ class Session(Publisher):
         self.__bus_route_number_recognition_pipeline.add_handler('update_bus_route_number',
                                                                  self.__interruption_update_bus_route_number)
 
-        self.__tasks = deque(maxlen=8)  # TODO: Setup deque max len with constant
+        self.__tasks = deque(maxlen=self.TASKS_DEQUE_MAXIMUM_LENGTH)
         self.__tasks_semaphore = Semaphore(0)
         self.__thread = Thread(target=self.run)
 
@@ -53,6 +55,10 @@ class Session(Publisher):
         self.broadcast(BusBoxMessage(Event.BUS_DETECTION, result['boxes']))
 
     def run(self):
+        """
+        Starts session
+        :return: none
+        """
         while True:
             self.__tasks_semaphore.acquire()
             task = self.__tasks.pop()
@@ -64,6 +70,11 @@ class Session(Publisher):
                 self.__run_bus_route_number_recognition_pipeline(task.image)
 
     def push_task(self, task: Task):
+        """
+        Pushes task in queue
+        :param task: Task to do
+        :return: none
+        """
         self.__tasks.append(task)
         self.__tasks_semaphore.release()
 
@@ -81,5 +92,5 @@ class Session(Publisher):
         for bus_box in bus_boxes:
             for text_box in bus_box.get_subboxes():
                 if BoxValidator.has_valid_text(text_box):
-                    bus_box.route_number = text_box.get_text()
+                    bus_box.route_number = text_box.text
                     break

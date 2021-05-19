@@ -62,6 +62,10 @@ class SessionController:
             self.__on_send_bus_box(message)
 
     def run(self):
+        """
+        Starts client listening loop
+        :return: none
+        """
         try:
             while True:
                 self.__listen()
