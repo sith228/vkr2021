@@ -17,14 +17,8 @@ class SessionController:
         self.session.add_callback(self.__session_callback)
 
     def __listen(self):
-        header = Header(self.connection.recvfrom(Header.length)[0])
-        data = b''
-        remaining_length = header.data_length
-        while remaining_length > 0:
-            data += self.connection.recvfrom(self.DEFAULT_DATA_PACKET_LENGTH
-                                             if remaining_length > self.DEFAULT_DATA_PACKET_LENGTH
-                                             else remaining_length)[0]
-            remaining_length = header.data_length - len(data)
+        header = Header(self.__receive(Header.LENGTH))
+        data = self.__receive(header.data_length)
 
         if header.event == Event.INIT_SESSION:
             self.__on_init_session(data)
@@ -32,6 +26,16 @@ class SessionController:
             self.__on_bus_detection(data)
         elif header.event == Event.BUS_ROUTE_NUMBER_RECOGNITION:
             self.__on_bus_route_number_recognition(data)
+
+    def __receive(self, length: int):
+        result = b''
+        remaining_length = length
+        while remaining_length > 0:
+            result += self.connection.recvfrom(self.DEFAULT_DATA_PACKET_LENGTH
+                                               if remaining_length > self.DEFAULT_DATA_PACKET_LENGTH
+                                               else remaining_length)[0]
+            remaining_length = length - len(result)
+        return result
 
     def __answer(self, header: Header, data: bytes = None):
         if data is not None:

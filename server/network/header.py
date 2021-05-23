@@ -1,8 +1,10 @@
+from typing import Final
+
 from . import Event
 
 
 class Header:
-    length = 21
+    LENGTH: Final = 21
 
     def __init__(self, data: bytes = None, event: Event = None, token: int = None, data_length: int = None):
         """
