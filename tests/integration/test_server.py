@@ -23,7 +23,7 @@ class TestServer:
         client_socket.connect(('localhost', 5000))  # TODO: port from constant
         client_socket.send(header + data)
         # Wait for answer
-        header = Header(client_socket.recvfrom(Header.length)[0])
+        header = Header(client_socket.recvfrom(Header.LENGTH)[0])
 
     def test_session_bus_route_number_recognition(self):
         image = cv2.imread('test_data/mobilenet_data_v1/2019-10-06 13-12-21.jpg')
@@ -33,4 +33,4 @@ class TestServer:
         client_socket.connect(('localhost', 5000))  # TODO: port from constant
         client_socket.send(header + data)
         # Wait for answer
-        header = Header(client_socket.recvfrom(Header.length)[0])
+        header = Header(client_socket.recvfrom(Header.LENGTH)[0])
