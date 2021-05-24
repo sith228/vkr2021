@@ -27,3 +27,5 @@ Testing:
       cobertura: coverage.xml
       junit: report.xml
       metrics: metrics.txt
+    paths:
+      - log

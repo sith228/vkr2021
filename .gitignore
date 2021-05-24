@@ -8,7 +8,7 @@
 # Directories with temporary files
 /files
 /test_numbers
-/log
+*.log
 
 # Test data
 /test_data

@@ -14,6 +14,7 @@ class Box:
         :param image: OpenCV image
         """
         self.bound_box_coordinates: Tuple[int, int] = bound_box_coordinates
+        self.absolute_coordinates: bound_box_coordinates
         self.__check_list__ = {}
         self.height: int = height  # height of box
         self.width: int = width  # width of box
@@ -102,7 +103,7 @@ class Box:
         :return: none
         """
         parent_bound_box = parent_box.get_bound_box()
-        self.bound_box_coordinates = (self.bound_box_coordinates[0] + parent_bound_box[0],
+        self.absolute_coordinates = (self.bound_box_coordinates[0] + parent_bound_box[0],
                                       self.bound_box_coordinates[1] + parent_bound_box[1])
 
     @staticmethod

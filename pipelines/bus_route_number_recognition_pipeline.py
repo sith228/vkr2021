@@ -8,14 +8,19 @@ from server.message.bus_box_message import BusBoxMessage
 from tools.models.object_detector import ObjectDetectorFactory
 from tools.models.text_detector import TextDetectorFactory
 from tools.models.text_recognizer import TextRecognizerFactory
+from common.logger import Logger
+import logging
 
 
 class BusRouteNumberRecognitionPipeline(Pipeline):
     def __init__(self):
         super().__init__()
+        logging.setLoggerClass(Logger)
+        self.logger = logging.getLogger("pipelines")
         self.__bus_detector = ObjectDetectorFactory.get('yolo')
         self.__text_recognizer = TextRecognizerFactory.get('moran')
         self.__text_detector = TextDetectorFactory.get('craft')
+        self.logger.info('Pipeline initialized')
 
     def start_processing(self, image: np.ndarray) -> Dict[str, List[BusBox]]:
         """
@@ -23,7 +28,6 @@ class BusRouteNumberRecognitionPipeline(Pipeline):
         :param image: image
         :return: Dictionary with bus
         """
-
         # Bus detection
         self.__bus_detector.prediction(image)
         bus_boxes = self.__bus_detector.get_boxes()
@@ -32,6 +36,7 @@ class BusRouteNumberRecognitionPipeline(Pipeline):
         # Route number detection
         for bus_box in bus_boxes:
             self.__text_detector.prediction(bus_box.get_cropped_image())
+            self.logger.info('BUS BOX: ' + str(bus_box.get_bound_box()))
             route_number_boxes = self.__text_detector.get_boxes()
             bus_box.insert_boxes(route_number_boxes)
             # TODO: Synchronise boxes with session
@@ -40,7 +45,10 @@ class BusRouteNumberRecognitionPipeline(Pipeline):
             for route_number_box in route_number_boxes:
                 route_number_box.set_absolute_coordinates_from_parent(bus_box)
                 self.__text_recognizer.prediction(route_number_box.get_cropped_image())
+
                 route_number_box.text = self.__text_recognizer.get_result()
+                self.logger.info('ROUT BOX: ' + str(route_number_box.get_bound_box()))
+                self.logger.info('ROUT NUMBER: ' + route_number_box.text)
                 # TODO: Synchronise boxes with session
         self.interrupt('update_bus_route_number', bus_boxes)
         return {
