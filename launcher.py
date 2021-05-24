@@ -1,7 +1,7 @@
 import argparse
 import logging
 
-from common.logger import init_logger
+from common.logger import init_logger, Logger
 from server.tcpserver import TCPServer
 
 
@@ -40,8 +40,9 @@ class Launcher(object):
 
 if __name__ == "__main__":
     init_logger()
-    logger = logging.getLogger("root")
-    logger.info("Logger initialized")
+    logging.setLoggerClass(Logger)
+    logger = logging.getLogger('root')
+    logger.info('Logger initialized')
 
     launch = Launcher()
     launch.run()

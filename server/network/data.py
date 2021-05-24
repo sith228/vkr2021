@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Mapping
 
 import cv2
 import numpy as np
@@ -63,3 +63,13 @@ class Data:
                 result += int(0).to_bytes(4, 'little')  # Text length
 
         return result
+
+    @staticmethod
+    def decode_bus_boxes(data: bytes) -> Mapping:
+        result_packet = {'control': int.from_bytes(data[0:1], 'little'), 'x': int.from_bytes(data[1:5], 'little'),
+                         'y': int.from_bytes(data[5:9], 'little'), 'height': int.from_bytes(data[9:13], 'little'),
+                         'width': int.from_bytes(data[13:17], 'little'),
+                         'text_size': int.from_bytes(data[17:21], 'little')}
+        result_packet['text'] = data[21:21+result_packet['text_size']].decode()
+        return result_packet
+

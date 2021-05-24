@@ -13,6 +13,7 @@ from server.network.event import Event
 from pipelines.bus_detection_pipeline import BusDetectionPipeline
 from pipelines.bus_door_detection_pipeline import BusDoorDetectionPipeline
 from pipelines.bus_route_number_recognition_pipeline import BusRouteNumberRecognitionPipeline
+import logging
 
 
 class Session(Publisher):
@@ -20,7 +21,7 @@ class Session(Publisher):
 
     def __init__(self):
         super().__init__()
-
+        self.logger = logging.getLogger('root')
         self.__bus_detection_pipeline = BusDetectionPipeline()
 
         self.__bus_door_detection_pipeline = BusDoorDetectionPipeline()
@@ -39,18 +40,22 @@ class Session(Publisher):
         self.__tasks = deque(maxlen=self.TASKS_DEQUE_MAXIMUM_LENGTH)
         self.__tasks_semaphore = Semaphore(0)
         self.__thread = Thread(target=self.run)
+        self.logger.info('Session initialized')
 
         self.__thread.start()
 
     # Tasks ============================================================================================================
     def __run_bus_detection_pipeline(self, image: np.ndarray):
         result = self.__bus_detection_pipeline.start_processing(image)
+        self.logger.info('RUN BUS DETECTION')
         self.broadcast(BusBoxMessage(Event.BUS_DETECTION, result['boxes']))
 
     def __run_bus_door_detection_pipeline(self, image: np.ndarray):
+        self.logger.info('RUN BUS DOOR DETECTION')
         self.__bus_door_detection_pipeline.start_processing(image)
 
     def __run_bus_route_number_recognition_pipeline(self, image: np.ndarray):
+        self.logger.info('RUN BUS ROUTE NUMBER RECOGNITION')
         result = self.__bus_route_number_recognition_pipeline.start_processing(image)
         self.broadcast(BusBoxMessage(Event.BUS_DETECTION, result['boxes']))
 
@@ -75,6 +80,7 @@ class Session(Publisher):
         :param task: Task to do
         :return: none
         """
+        self.logger.info('Push task -> ' + str(task.event))
         self.__tasks.append(task)
         self.__tasks_semaphore.release()
 
@@ -93,4 +99,5 @@ class Session(Publisher):
             for text_box in bus_box.get_subboxes():
                 if BoxValidator.has_valid_text(text_box):
                     bus_box.route_number = text_box.text
+                    self.logger.info('BUS ROUT = ' + bus_box.route_number)
                     break

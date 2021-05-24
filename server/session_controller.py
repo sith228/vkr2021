@@ -1,5 +1,6 @@
 import socket
 from typing import Final
+import logging
 
 from server.message.bus_box_message import BusBoxMessage
 from server.message.session_message import SessionMessage
@@ -12,6 +13,7 @@ class SessionController:
     DEFAULT_DATA_PACKET_LENGTH: Final = 512
 
     def __init__(self, connection: socket):
+        self.logger = logging.getLogger('root')
         self.connection = connection
         self.session = Session()
         self.session.add_callback(self.__session_callback)
@@ -40,6 +42,8 @@ class SessionController:
     def __answer(self, header: Header, data: bytes = None):
         if data is not None:
             self.connection.send(header.to_bytes() + data)
+            result = Data.decode_bus_boxes(data)
+            self.logger.info('RESULT RESPONSE: ' + str(result))
         else:
             self.connection.send(header.to_bytes())
 
