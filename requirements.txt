@@ -23,6 +23,7 @@ six
 urllib3
 Werkzeug
 wincertstore
+xlsxwriter
 
 #Moran text recongition
 colour

@@ -3,8 +3,7 @@ import cv2
 import re
 from typing import Tuple, List
 from common.box.text_box import Box, TextBox
-from common.logger import init_logger
-
+# from .fake_box import create_fake_box
 import logging
 
 
@@ -74,11 +73,14 @@ class Accuracy:
 
         for file_box in data:
             result = file_box.split(' ')
-            if result[1][-1] == '\n':
-                result[1] = result[1][:-1]
             text = result[0]
+            if len(result) > 2:
+                for tt in result[1:-1]:
+                    text = text + ' ' + tt
+            if result[-1][-1] == '\n':
+                result[-1] = result[-1][:-1]
 
-            results_data.append((text, result[1]))
+            results_data.append((text, result[-1]))
         return results_data
 
     # TODO: Need add logging data
@@ -131,23 +133,33 @@ class Accuracy:
                     return 0.0
 
     @staticmethod
-    def check_text_box(text_box: Tuple[str, List[TextBox]], data: str):
+    def check_text_box(text_box: Tuple[str, List[TextBox]], data: str, is_intersection: bool = True):
         logger = logging.getLogger('tests')
-        result_data = Accuracy.get_test_image(data)
         all_images = 0
         do_match: bool = False
         accuracy_recognition: float = 0.0
-        for next_data in result_data:
-            if next_data[0] == text_box[0]:
-                image = cv2.imread(next_data[0])
-                result_box = Box((next_data[1][0], next_data[1][1]), next_data[1][2], next_data[1][3], image)
-                for test_box in text_box[1]:
-                    all_images = all_images + 1
-                    if Box.check_intersection(test_box, result_box):
-                        if Box.compare_boxes_area(test_box, result_box):
-                            if Accuracy.check_text_recognition(test_box.text, next_data[2]) > 0.75:
-                                accuracy_recognition = Accuracy.check_text_recognition(test_box.text, next_data[2])
-                                do_match = True
+        if is_intersection:
+            result_data = Accuracy.get_test_image(data)
+            for next_data in result_data:
+                if next_data[0] == text_box[0]:
+                    image = cv2.imread(next_data[0])
+                    result_box = Box((next_data[1][0], next_data[1][1]), next_data[1][2], next_data[1][3], image)
+                    for test_box in text_box[1]:
+                        all_images = all_images + 1
+                        if Box.check_intersection(test_box, result_box):
+                            if Box.compare_boxes_area(test_box, result_box):
+                                if Accuracy.check_text_recognition(test_box.text, next_data[2]) > 0.75:
+                                    accuracy_recognition = Accuracy.check_text_recognition(test_box.text, next_data[2])
+                                    do_match = True
+        else:
+            result_data = Accuracy.get_test_image_text(data)
+            for next_data in result_data:
+                if next_data[0] == text_box[0]:
+                    for test_box in text_box[1]:
+                        all_images += 1
+                        if Accuracy.check_text_recognition(test_box.text, next_data[1]) > 0.60:
+                            accuracy_recognition = Accuracy.check_text_recognition(test_box.text, next_data[1])
+                            do_match = True
         logger.info('WAS MATCH: ' + str(do_match))
         if do_match:
             logger.info('Precision = ' + str(float(1 / all_images)))
@@ -157,3 +169,4 @@ class Accuracy:
             logger.info('Precision = 0')
             logger.info('Accuracy = 0')
             return do_match, 0, 0.0
+
