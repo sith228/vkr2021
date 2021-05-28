@@ -40,7 +40,6 @@ class Launcher(object):
 
 if __name__ == "__main__":
     init_logger()
-    logging.setLoggerClass(Logger)
     logger = logging.getLogger('root')
     logger.info('Logger initialized')
 

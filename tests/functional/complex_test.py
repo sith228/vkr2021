@@ -6,7 +6,7 @@ import logging
 import numpy as np
 from typing import List, Mapping
 
-from common.logger import init_logger
+from common.logger import init_logger_test
 from tests.checkers.test_checker import Accuracy
 from tools.models.object_detector import ObjectDetectorFactory
 from tools.models.text_detector import TextDetectorFactory
@@ -49,8 +49,8 @@ class TestComplexDataset:
     @pytest.mark.usefixtures('get_class_by_route', 'dump_metrics')
     @pytest.mark.parametrize('image_tuple', IMAGES)
     def test_bus_number_recognition(self, name_complex_data, image_tuple):
-        init_logger()
-        logger = logging.getLogger('tests')
+        init_logger_test()
+        logger = logging.getLogger('test_pipelines')
         bus_detector = ObjectDetectorFactory.get('yolo')
         text_recognizer = TextRecognizerFactory.get('moran')
         text_detector = TextDetectorFactory.get('craft')

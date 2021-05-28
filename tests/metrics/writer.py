@@ -2,6 +2,7 @@ import atexit
 import matplotlib.pyplot as plt
 import numpy as np
 import xlsxwriter
+import os
 
 from io import BytesIO
 from threading import Semaphore
@@ -44,6 +45,7 @@ class Writer:
         lst = range(len(value[1]))
         plt.plot(lst, value[1])
         plt.xlabel(value[0])
+        os.makedirs(os.path.dirname('log/'), exist_ok=True)
         image_path = './temp/plot_{}.png'.format(value[0])
         plt.savefig(image_path)
         image_data = BytesIO(open(image_path, 'rb').read())

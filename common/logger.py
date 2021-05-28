@@ -9,6 +9,8 @@ class Filter(logging.Filter):
             return True
         elif record.name == 'pipelines':
             return True
+        elif record.name == 'test_pipelines':
+            return True
         return False
 
 
@@ -24,7 +26,7 @@ def init_logger():
         'disable_existing_loggers': True,
         'formatters': {
             'default': {
-                'format': '[%(asctime)s:%(msecs)03d] [%(name)s] %(levelname)-5s %(message)s',
+                'format': '[%(asctime)s:%(msecs)03d] [%(levelname)5s] [%(name)10s]  %(message)s',
                 'datefmt': '%d.%m %H:%M:%S',
             }, 'net': {
                 'format': '%(asctime)s %(message)s',
@@ -63,6 +65,7 @@ def init_logger():
         },
     }
     os.makedirs(os.path.dirname('log/'), exist_ok=True)
+    logging.setLoggerClass(Logger)
     logging.config.dictConfig(logger_config)
 
 
@@ -72,7 +75,7 @@ def init_logger_test():
         'disable_existing_loggers': True,
         'formatters': {
             'default': {
-                'format': '[%(asctime)s:%(msecs)03d] [%(name)s] %(levelname)-5s %(message)s',
+                'format': '[%(asctime)s:%(msecs)03d] [%(levelname)5s] [%(name)10s] %(message)s',
                 'datefmt': '%d.%m %H:%M:%S',
             }
         },
@@ -94,4 +97,5 @@ def init_logger_test():
         },
     }
     os.makedirs(os.path.dirname('log/'), exist_ok=True)
+    logging.setLoggerClass(Logger)
     logging.config.dictConfig(logger_config)
