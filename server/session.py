@@ -1,8 +1,9 @@
 from collections import deque
-from threading import Semaphore, Thread
 from typing import List, Final
 
 import numpy as np
+import threading
+import time
 
 from common.box import BusBox, TextBox
 from common.event import Publisher
@@ -18,12 +19,16 @@ import logging
 
 class Session(Publisher):
     TASKS_DEQUE_MAXIMUM_LENGTH: Final = 8
+    TASK_MAX_TIME_DELAY: Final = 2.0
 
     def __init__(self):
         super().__init__()
-        self.logger = logging.getLogger('root')
-        self.__bus_detection_pipeline = BusDetectionPipeline()
 
+        self.logger = logging.getLogger('root')
+
+        self.__close_flag = False
+
+        self.__bus_detection_pipeline = BusDetectionPipeline()
         self.__bus_door_detection_pipeline = BusDoorDetectionPipeline()
 
         # Setup bus route number recognition pipeline
@@ -38,8 +43,9 @@ class Session(Publisher):
                                                                  self.__interruption_update_bus_route_number)
 
         self.__tasks = deque(maxlen=self.TASKS_DEQUE_MAXIMUM_LENGTH)
-        self.__tasks_semaphore = Semaphore(0)
-        self.__thread = Thread(target=self.run)
+        self.__tasks_semaphore = threading.Semaphore(0)
+        self.__tasks_mutex = threading.Lock()
+        self.__thread = threading.Thread(target=self.__run)
         self.logger.info('Session initialized')
 
         self.__thread.start()
@@ -59,20 +65,34 @@ class Session(Publisher):
         result = self.__bus_route_number_recognition_pipeline.start_processing(image)
         self.broadcast(BusBoxMessage(Event.BUS_DETECTION, result['boxes']))
 
-    def run(self):
+    def __run(self):
         """
         Starts session
         :return: none
         """
         while True:
+            if self.__close_flag:
+                return
+            self.__remove_old_tasks()
             self.__tasks_semaphore.acquire()
-            task = self.__tasks.pop()
+            try:
+                task = self.__tasks.pop()
+            except IndexError:  # TODO: Remove this if never happens
+                self.logger.error('Session synchronisation error')
+                continue
             if task.event == Event.BUS_DETECTION:
                 self.__run_bus_detection_pipeline(task.image)
             elif task.event == Event.BUS_ROUTE_NUMBER_RECOGNITION:
                 self.__run_bus_route_number_recognition_pipeline(task.image)
             elif task.event == Event.BUS_DOOR_DETECTION:
                 self.__run_bus_route_number_recognition_pipeline(task.image)
+
+    def __remove_old_tasks(self):
+        self.__tasks_mutex.acquire()
+        while self.__tasks and time.time() - self.__tasks[0].creation_time > self.TASK_MAX_TIME_DELAY:
+            self.__tasks_semaphore.acquire()
+            self.__tasks.popleft()
+        self.__tasks_mutex.release()
 
     def push_task(self, task: Task):
         """
@@ -81,8 +101,17 @@ class Session(Publisher):
         :return: none
         """
         self.logger.info('Push task -> ' + str(task.event))
+        self.__tasks_mutex.acquire()
+        is_need_to_semaphore_release = False
+        if len(self.__tasks) < 8:
+            is_need_to_semaphore_release = True
         self.__tasks.append(task)
-        self.__tasks_semaphore.release()
+        if is_need_to_semaphore_release:
+            self.__tasks_semaphore.release()
+        self.__tasks_mutex.release()
+
+    def close(self):
+        self.__close_flag = True
 
     # Interruptions ====================================================================================================
     def __interruption_update_bus_boxes(self, bus_boxes: List[BusBox]):
