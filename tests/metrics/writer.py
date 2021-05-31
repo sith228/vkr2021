@@ -5,14 +5,14 @@ import xlsxwriter
 import os
 
 from io import BytesIO
-from threading import Semaphore
+from threading import Lock
 
 from . import Experiment
 
 
 # TODO: Create temp folder automatically
 class Writer:
-    __semaphore: Semaphore = Semaphore(1)
+    __mutex: Lock = Lock()
     __workbook: xlsxwriter.Workbook = xlsxwriter.Workbook('metrics.xlsx')
 
     @classmethod
@@ -22,7 +22,8 @@ class Writer:
         :param experiment: Experiment that should be written
         :return: Nothing
         """
-        cls.__semaphore.acquire()
+        cls.__mutex.acquire()
+        os.makedirs('./temp', exist_ok=True)
         worksheet = cls.__workbook.add_worksheet(experiment.name)
         for i, value in enumerate(experiment.values.items()):
             worksheet.write(0, i, value[0])
@@ -38,7 +39,7 @@ class Writer:
                 pass
                 # cls.__add_accuracy_plot(worksheet, value)
 
-        cls.__semaphore.release()
+        cls.__mutex.release()
 
     @classmethod
     def test(cls, worksheet, value):
