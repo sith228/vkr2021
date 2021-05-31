@@ -63,6 +63,7 @@ class TestServer:
         logger.info('RESULT RESPONSE: ' + str(result))
 
     @pytest.mark.parametrize('event', test_data)
+    @pytest.mark.skip
     def test_speed_scoring(self, event, logger):
         image = cv2.imread('test_data/mobilenet_data_v1/2019-10-06 13-12-21.jpg')
         test_func = lambda: self.func(image, event)
