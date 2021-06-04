@@ -4,6 +4,7 @@ from common.box import BusBox
 from pipelines.pipeline import Pipeline
 from tools.models.object_detector import ObjectDetectorFactory
 import logging
+from datetime import datetime
 import cv2
 
 import numpy as np
@@ -27,4 +28,7 @@ class BusDetectionPipeline(Pipeline):
         for bus_detected in self.bus_detector.get_boxes():
             self.logger.info(str(bus_detected.get_bound_box()))
         bus_boxes = self.bus_detector.get_boxes()
+        if len(bus_boxes) > 0:
+            name = 'raw_images/' + str(datetime.now()).replace(':', '-').replace('.', '-').replace(' ', '_') + '.jpg'
+            cv2.imwrite(name, image)  # TODO: need to delete before release
         return {'boxes': bus_boxes}

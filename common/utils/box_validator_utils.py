@@ -27,5 +27,5 @@ class BoxValidator:
         :param text_box: input text box
         :return: True if matched
         """
-        return re.match(r'(^[a-zA-Zа-яА-Я]\d\d*$)|(^\d\d*$)', text_box.text)
+        return re.match(r'(^[a-zA-Zа-яА-Я]\d\d{,2}$)|(^\d\d{,2}$)', text_box.text)
 
