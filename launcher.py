@@ -1,8 +1,9 @@
 import argparse
 import logging
 
-from common.logger import init_logger, Logger
+from common.logger import init_logger
 from server.tcpserver import TCPServer
+import os
 
 
 class Launcher(object):
@@ -10,6 +11,7 @@ class Launcher(object):
         args = self.__get_argument_parser().parse_args()
         self.server = TCPServer('', args.port)
         logger.info("Server initialized")
+        os.environ['save_images'] = args.save_results
 
     @staticmethod
     def __get_argument_parser() -> argparse.ArgumentParser:
@@ -28,6 +30,7 @@ class Launcher(object):
                             help="Text recognition network")
         parser.add_argument("-debug", action="store_true")
         parser.add_argument("-output_dir", default="files")
+        parser.add_argument('-save_results', action="store", default='False', type=str)
         return parser
 
     def run(self):

@@ -23,9 +23,12 @@ class BoxValidator:
     @staticmethod
     def has_valid_text(text_box: TextBox):
         """
-        Match text from text box with usual number naming
+        Match text from text box with usual number naming REGEXP: Check if recognized text matches with one of
+        templates. TEMPLATES: 1) Any character + any digits ( count of digits should be in limit from 1 to 3),
+        example: A43, T1, Z072. Incorrect Example: TQ12, A1234, 12A 2) Any digits ( count of digits should be in limit
+        from 1 to 3). Example: 97, 103, 123.  Incorrect Example: 1234
         :param text_box: input text box
         :return: True if matched
         """
-        return re.match(r'(^[a-zA-Zа-яА-Я]\d\d*$)|(^\d\d*$)', text_box.text)
+        return re.match(r'(^[a-zA-Zа-яА-Я]\d{1,3}$)|(^\d{1,3}$)', text_box.text)
 

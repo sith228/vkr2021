@@ -1,15 +1,20 @@
 from typing import Dict, List
+from datetime import datetime
 
 import numpy as np
+import cv2
+import os
+import logging
+
 
 from common.box import BusBox
+from common.utils.box_validator_utils import BoxValidator
 from pipelines.pipeline import Pipeline
 from server.message.bus_box_message import BusBoxMessage
 from tools.models.object_detector import ObjectDetectorFactory
 from tools.models.text_detector import TextDetectorFactory
 from tools.models.text_recognizer import TextRecognizerFactory
 from common.logger import Logger
-import logging
 
 
 class BusRouteNumberRecognitionPipeline(Pipeline):
@@ -49,8 +54,15 @@ class BusRouteNumberRecognitionPipeline(Pipeline):
                 route_number_box.text = self.__text_recognizer.get_result()
                 self.logger.info('ROUT BOX: ' + str(route_number_box.get_bound_box()))
                 self.logger.info('ROUT NUMBER: ' + route_number_box.text)
+                if BoxValidator.has_valid_text(route_number_box) and os.environ['save_images'] == 'True':
+                    name = 'cropped_moran/' + str(datetime.now()).replace(':', '-').replace('.', '-').replace(' ',
+                                                                                                              '_') + '.jpg'
+                    cv2.imwrite(name, route_number_box.get_cropped_image())  # TODO: need to delete before release
                 # TODO: Synchronise boxes with session
         self.interrupt('update_bus_route_number', bus_boxes)
+        if len(bus_boxes) > 0 and os.environ['save_images'] == 'True':
+            name = 'raw_images/' + str(datetime.now()).replace(':', '-').replace('.', '-').replace(' ', '_') + '.jpg'
+            cv2.imwrite(name, image)  # TODO: need to delete before release
         return {
             'boxes': bus_boxes,
         }
