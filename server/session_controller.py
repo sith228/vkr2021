@@ -40,12 +40,15 @@ class SessionController:
         return result
 
     def __answer(self, header: Header, data: bytes = None):
-        if data is not None:
-            self.connection.send(header.to_bytes() + data)
-            result = Data.decode_bus_boxes(data)
-            self.logger.info('RESULT RESPONSE: ' + str(result))
-        else:
-            self.connection.send(header.to_bytes())
+        try:
+            if data is not None:
+                self.connection.send(header.to_bytes() + data)
+                result = Data.decode_bus_boxes(data)
+                self.logger.info('RESULT RESPONSE: ' + str(result))
+            else:
+                self.connection.send(header.to_bytes())
+        except (ConnectionResetError, ConnectionAbortedError):
+            return
 
     # Network event handlers ===========================================================================================
     def __on_init_session(self, data):
@@ -77,5 +80,6 @@ class SessionController:
         try:
             while True:
                 self.__listen()
-        except ConnectionResetError:
+        except (ConnectionResetError, ConnectionAbortedError):
+            self.session.close()
             return
