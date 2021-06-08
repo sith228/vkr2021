@@ -3,12 +3,14 @@ import socket
 import cv2
 import pytest
 import logging
+from typing import List, Mapping
 
 from server.network import Header, Event, Data
 from server.network.image_format import ImageFormat
-from server.tcpserver import TCPServer
 from common.logger import init_logger_test
 from tests.checkers.test_checker import Performance
+from tests.checkers.test_checker import Accuracy
+
 
 
 class TestServer:
@@ -63,8 +65,9 @@ class TestServer:
         logger.info('RESULT RESPONSE: ' + str(result))
 
     @pytest.mark.parametrize('event', test_data)
-    @pytest.mark.skip
+    @pytest.mark.skip('CI failed tests with connection error')
     def test_speed_scoring(self, event, logger):
         image = cv2.imread('test_data/mobilenet_data_v1/2019-10-06 13-12-21.jpg')
         test_func = lambda: self.func(image, event)
         logger.info('Performance speed ' + str(event) + ' ' + str(Performance.check(test_func)))
+
